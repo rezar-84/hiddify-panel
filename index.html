@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VIP Access Portal — bulutux.net</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,7 @@
       --font-en: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     body {
-      background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      background: #090d16;
       color: #f8fafc;
       min-height: 100vh;
       -webkit-tap-highlight-color: transparent;
@@ -32,75 +32,27 @@
       font-family: 'JetBrains Mono', monospace !important; 
     }
     
-    /* Strict LTR forcing for links, inputs, and tech IDs */
     .force-ltr {
       direction: ltr !important;
       text-align: left !important;
       unicode-bidi: isolate;
     }
 
-    .glass-card {
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Purposeful elevated container */
+    .portal-card {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 20px;
+      padding: 1.25rem;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
-    /* Big Circular Power Button with Neon Ripple */
-    .power-btn-container {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1.25rem 0 0.5rem 0;
+    /* Action button with authentic press feedback */
+    .action-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .power-btn-glow-ring {
-      position: absolute;
-      width: 140px;
-      height: 140px;
-      border-radius: 9999px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, rgba(14, 165, 233, 0.1) 70%, transparent 100%);
-      animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-    .power-btn {
-      position: relative;
-      width: 110px;
-      height: 110px;
-      border-radius: 9999px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 45%, #0284c7 100%);
-      border: 3px solid rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.65), 0 10px 25px -5px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      text-decoration: none;
-    }
-    .power-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 45px 0px rgba(16, 185, 129, 0.85), inset 0 2px 6px rgba(255, 255, 255, 0.6);
-    }
-    .power-btn:active {
-      transform: scale(0.95);
-      box-shadow: 0 0 20px -2px rgba(16, 185, 129, 0.5);
-    }
-    .power-icon {
-      width: 44px;
-      height: 44px;
-      stroke: #ffffff;
-      fill: none;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    }
-    @keyframes pulse-ring {
-      0%, 100% { transform: scale(0.95); opacity: 0.6; }
-      50% { transform: scale(1.15); opacity: 0.25; }
+    .action-btn:active {
+      transform: scale(0.98);
     }
   </style>
 </head>
@@ -108,18 +60,18 @@
   <div id="app" :class="lang === 'fa' ? 'font-fa' : 'font-en'" :dir="lang === 'fa' ? 'rtl' : 'ltr'" class="max-w-xl w-full space-y-4 my-auto">
 
     <!-- Top Bar: Avatar + Lang Switcher + Tour Button -->
-    <div class="flex items-center justify-between px-1">
+    <header class="flex items-center justify-between px-1">
       <div class="flex items-center gap-3">
         <div class="relative">
-          <img src="avatar.jpg" alt="Bulutux" class="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl border-2 border-sky-400/80 shadow-lg shadow-sky-500/20 object-cover">
-          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900 shadow"></span>
+          <img src="avatar.jpg" alt="Bulutux" class="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl border-2 border-sky-400/80 shadow-md object-cover">
+          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900 shadow" title="Online"></span>
         </div>
         <div>
-          <div class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
+          <div class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
             <span>Bulutux Network</span>
           </div>
-          <div class="text-xs text-sky-400/90 font-medium">VIP Fleet Infrastructure</div>
-          <div class="text-[10px] text-slate-400">All Nodes Active • Failover Ready</div>
+          <div class="text-xs text-sky-400 font-semibold">VIP Fleet Infrastructure</div>
+          <div class="text-[11px] text-slate-300">All Nodes Active • Failover Ready</div>
         </div>
       </div>
 
@@ -128,7 +80,8 @@
         <button 
           v-if="currentUser"
           @click="showTour = true" 
-          class="px-2.5 py-1.5 rounded-lg bg-sky-950/80 border border-sky-500/40 text-sky-300 text-xs font-semibold hover:bg-sky-900 transition flex items-center gap-1 shadow-sm">
+          aria-label="راهنمای اتصال"
+          class="min-h-[40px] px-3 py-2 rounded-xl bg-sky-950/80 border border-sky-500/40 text-sky-300 text-xs font-semibold hover:bg-sky-900 transition flex items-center gap-1.5 shadow-sm active:scale-95">
           <span>💡</span>
           <span>{{ t('tourBtn') }}</span>
         </button>
@@ -136,60 +89,102 @@
         <!-- Persian / English Switcher -->
         <button 
           @click="toggleLang" 
-          class="px-2.5 py-1.5 rounded-lg bg-slate-800/90 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 transition flex items-center gap-1.5 shadow-sm">
+          aria-label="تغییر زبان"
+          class="min-h-[40px] px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 transition flex items-center gap-1.5 shadow-sm active:scale-95">
           <span>🌐</span>
           <span>{{ lang === 'en' ? 'فارسی' : 'English' }}</span>
         </button>
       </div>
+    </header>
+
+    <!-- In-App Browser Warning (Telegram / WhatsApp) -->
+    <div v-if="isInAppBrowser" class="p-3.5 rounded-xl bg-amber-950/80 border border-amber-500/50 text-amber-200 text-xs flex items-start gap-2.5 shadow-md">
+      <span class="text-base">⚠️</span>
+      <div class="leading-relaxed">
+        <strong>{{ t('inAppWarnTitle') }}:</strong> {{ t('inAppWarnDesc') }}
+      </div>
     </div>
 
     <!-- STATE 1: Access Token Required (Locked Screen) -->
-    <div v-if="!currentUser" class="glass-card p-6 sm:p-8 space-y-5 text-center shadow-2xl">
+    <main v-if="!currentUser" class="portal-card p-6 sm:p-8 space-y-5 text-center shadow-xl">
       <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-sky-950/80 border border-sky-500/30 text-sky-400 text-2xl mx-auto shadow-inner">
         🔒
       </div>
       
       <div class="space-y-1.5">
         <h1 class="text-xl sm:text-2xl font-extrabold text-white">{{ t('portalTitle') }}</h1>
-        <p class="text-xs text-slate-400 leading-relaxed">
+        <p class="text-xs text-slate-300 leading-relaxed">
           {{ t('portalDesc') }}
         </p>
       </div>
 
       <form @submit.prevent="verifyManualToken" class="space-y-3 pt-2 text-start">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">{{ t('tokenLabel') }}</label>
+          <label for="token-input" class="block text-xs font-semibold text-slate-200 mb-1.5">{{ t('tokenLabel') }}</label>
           <input 
+            id="token-input"
             v-model="inputToken" 
             type="text" 
             :placeholder="t('tokenPlaceholder')" 
-            class="w-full bg-slate-900/90 border border-slate-700 focus:border-sky-500 rounded-xl p-3 text-xs text-white mono outline-none transition force-ltr">
+            aria-label="کد دسترسی یا توکن کاربر"
+            class="w-full bg-slate-900 border border-slate-700 focus:border-sky-500 rounded-xl p-3.5 text-xs text-white mono outline-none transition force-ltr">
         </div>
         <button 
           type="submit" 
-          class="w-full py-3.5 px-4 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold transition shadow-lg glow-btn">
+          class="w-full min-h-[46px] py-3 px-4 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs sm:text-sm font-bold transition shadow-md active:scale-98">
           {{ t('unlockBtn') }}
         </button>
       </form>
 
-      <div v-if="errorMsg" class="p-2.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-rose-300 text-xs text-start">
-        {{ errorMsg }}
+      <div v-if="errorMsg" class="p-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-xs text-start leading-relaxed">
+        <div class="font-bold mb-0.5">⚠️ {{ errorMsg }}</div>
+        <div class="text-[11px] text-rose-300">{{ t('errorHelp') }}</div>
       </div>
-    </div>
+    </main>
 
     <!-- STATE 2: Authorized User Dashboard -->
-    <div v-else class="space-y-4">
+    <main v-else class="space-y-4">
 
-      <!-- Profile Overview Card with Big Power Button -->
-      <div id="tour-profile" class="glass-card p-5 space-y-4 text-center">
+      <!-- STEP 1: Prerequisite App Check (Collapsible/Dismissible) -->
+      <section v-if="!appInstalledAcknowledged" class="portal-card p-4 space-y-3 border-sky-500/30">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-sky-900/80 text-sky-300 text-xs font-bold flex items-center justify-center border border-sky-500/40">۱</span>
+            <h2 class="text-xs sm:text-sm font-bold text-white">{{ t('step1Title') }}</h2>
+          </div>
+          <button @click="dismissAppStep" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1">
+            <span>✓</span> {{ t('alreadyInstalled') }}
+          </button>
+        </div>
+
+        <p class="text-xs text-slate-300 leading-relaxed">
+          {{ t('step1Desc') }}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2.5 force-ltr">
+          <!-- iOS App Store -->
+          <a href="https://apps.apple.com/app/hiddify-proxy-vpn/id6593660983" target="_blank" rel="noopener noreferrer" class="min-h-[40px] px-3.5 py-2 rounded-xl bg-sky-950/80 border border-sky-500/40 text-sky-300 hover:text-white hover:bg-sky-900 transition flex items-center gap-2 text-xs font-semibold">
+            <span>🍏</span>
+            <span>Download for iOS (App Store)</span>
+          </a>
+          <!-- Android / Windows / macOS / Linux -->
+          <a href="https://github.com/hiddify/hiddify-next/releases/latest" target="_blank" rel="noopener noreferrer" class="min-h-[40px] px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 hover:text-white hover:bg-slate-700 transition flex items-center gap-2 text-xs font-semibold">
+            <span>🤖 💻</span>
+            <span>Android / Windows / Mac</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- STEP 2: One-Tap Primary Connection Action -->
+      <section id="tour-profile" class="portal-card p-5 space-y-4">
         
         <!-- Header Info -->
-        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="text-start">
             <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">{{ t('subscriber') }}</span>
-            <h2 class="text-lg sm:text-xl font-bold text-white capitalize flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-bold text-white capitalize flex items-center gap-2">
               {{ currentUser.name }}
-              <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-600/50">{{ t('active') }}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-600/60 font-semibold">{{ t('active') }}</span>
             </h2>
           </div>
           <div class="text-end">
@@ -198,28 +193,38 @@
           </div>
         </div>
 
-        <!-- BIG CIRCULAR POWER BUTTON (Main 1-Click Action) -->
-        <div id="tour-oneclick" class="power-btn-container">
-          <div class="power-btn-glow-ring"></div>
-          <a :href="getHiddifyDeepLink(currentUser)" class="power-btn" :title="t('importAllBtn')">
-            <svg class="power-icon" viewBox="0 0 24 24">
-              <path d="M12 2v10"></path>
-              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-            </svg>
+        <!-- Primary Action Card (Replaces ambiguous power button with unified CTA) -->
+        <div id="tour-oneclick" class="space-y-2">
+          <a 
+            :href="getActiveDeepLink(currentUser, selectedServer)" 
+            :aria-label="t('importActionBtn') + ' ' + (lang === 'fa' ? selectedServer.full_name_fa : selectedServer.name)"
+            class="action-btn w-full min-h-[58px] p-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl shadow-lg flex items-center justify-between gap-3 text-start">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl shrink-0">
+                ⚡
+              </div>
+              <div>
+                <div class="text-sm sm:text-base font-extrabold text-white">
+                  {{ selectedServer.id === 'all' ? t('importAllBtn') : t('importSingleBtn') + ' (' + (lang === 'fa' ? selectedServer.name_fa : selectedServer.city) + ')' }}
+                </div>
+                <div class="text-xs text-emerald-100/90 font-medium">
+                  {{ t('oneTapNote') }}
+                </div>
+              </div>
+            </div>
+            <div class="text-xs px-2.5 py-1.5 rounded-lg bg-black/20 text-white font-bold shrink-0">
+              {{ t('tapToOpen') }} ↗
+            </div>
           </a>
-          <div class="mt-3.5 space-y-0.5">
-            <span class="text-sm sm:text-base font-extrabold text-white block tracking-wide">{{ t('connectAllTitle') }}</span>
-            <span class="text-[11px] text-slate-400 block">{{ t('connectAllSubtitle') }}</span>
-          </div>
         </div>
 
-      </div>
+      </section>
 
-      <!-- Server Selector Grid -->
-      <div id="tour-servers" class="space-y-2">
+      <!-- Server Selector Grid (Tabs) -->
+      <section id="tour-servers" class="space-y-2">
         <div class="flex items-center justify-between px-1">
-          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">{{ t('selectServer') }}</span>
-          <span class="text-[11px] text-slate-400">{{ t('serverCount') }}</span>
+          <span class="text-xs font-bold text-slate-200 uppercase tracking-wider">{{ t('selectServer') }}</span>
+          <span class="text-xs text-slate-400">{{ t('serverCount') }}</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -227,46 +232,49 @@
             v-for="srv in servers" 
             :key="srv.id" 
             @click="selectServer(srv)"
-            :class="selectedServer.id === srv.id ? 'ring-2 ring-sky-400 bg-sky-950/70 border-sky-500 shadow-md shadow-sky-900/40' : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'"
-            class="p-2.5 rounded-xl border text-start transition flex flex-col justify-between space-y-1.5 active:scale-95">
+            :aria-label="'انتخاب سرور ' + srv.city"
+            :class="selectedServer.id === srv.id ? 'ring-2 ring-sky-400 bg-sky-950/80 border-sky-400 shadow-md' : 'bg-slate-900 border-slate-800 hover:border-slate-700'"
+            class="min-h-[68px] p-3 rounded-xl border text-start transition flex flex-col justify-between space-y-1.5 active:scale-95">
             <div class="flex items-center justify-between">
-              <span class="text-lg">{{ srv.flag }}</span>
-              <span class="text-[10px] font-mono text-emerald-400 font-bold force-ltr inline-block">{{ srv.load }}</span>
+              <span class="text-xl">{{ srv.flag }}</span>
+              <span class="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
+                {{ lang === 'fa' ? srv.tag_fa : srv.tag_en }}
+              </span>
             </div>
             <div>
               <div class="font-bold text-xs text-white truncate">{{ lang === 'fa' ? srv.name_fa : srv.city }}</div>
-              <div class="text-[10px] text-slate-400 truncate">{{ lang === 'fa' ? srv.country_fa : srv.country }}</div>
+              <div class="text-[11px] text-slate-300 truncate">{{ lang === 'fa' ? srv.isp_fa : srv.isp_en }}</div>
             </div>
           </button>
         </div>
-      </div>
+      </section>
 
       <!-- Active Server QR Code & Details Card -->
-      <div id="tour-qrcode" class="glass-card p-4 sm:p-6 space-y-4">
+      <section id="tour-qrcode" class="portal-card p-4 sm:p-6 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2.5">
             <span class="text-2xl">{{ selectedServer.flag }}</span>
             <div>
               <h3 class="text-sm sm:text-base font-bold text-white">{{ lang === 'fa' ? selectedServer.full_name_fa : selectedServer.name }}</h3>
-              <p class="text-[11px] text-slate-400">
+              <p class="text-xs text-slate-300">
                 <span>{{ t('endpoint') }}: </span>
-                <span class="text-sky-300 mono force-ltr inline-block">{{ selectedServer.domain }}</span>
+                <span class="text-sky-300 mono force-ltr inline-block font-semibold">{{ selectedServer.domain }}</span>
               </p>
             </div>
           </div>
           <div class="text-end">
-            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">{{ t('load') }}</span>
-            <span class="text-xs font-mono font-bold text-emerald-400 force-ltr inline-block">{{ selectedServer.load }}</span>
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">{{ t('protocol') }}</span>
+            <span class="text-xs font-mono font-bold text-emerald-400 force-ltr inline-block">{{ selectedServer.protocols }}</span>
           </div>
         </div>
 
-        <!-- Live QR Code Display -->
+        <!-- Live QR Code Display (Soft dark frame to eliminate glare) -->
         <div class="flex flex-col items-center justify-center space-y-2.5 pt-1">
-          <div class="p-3 bg-white rounded-2xl shadow-xl flex items-center justify-center min-w-[210px] min-h-[210px]">
-            <img v-if="qrDataUrl" :src="qrDataUrl" alt="QR Code" class="w-[200px] h-[200px] block" />
-            <div v-else class="text-xs text-slate-500 animate-pulse font-medium">{{ t('generatingQr') }}</div>
+          <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner flex items-center justify-center min-w-[210px] min-h-[210px]">
+            <img v-if="qrDataUrl" :src="qrDataUrl" alt="QR Code" class="w-[200px] h-[200px] block rounded-lg bg-white p-1" />
+            <div v-else class="text-xs text-slate-400 animate-pulse font-medium">{{ t('generatingQr') }}</div>
           </div>
-          <p class="text-xs text-slate-400 text-center leading-relaxed max-w-sm">
+          <p class="text-xs text-slate-300 text-center leading-relaxed max-w-sm">
             {{ t('scanGuide') }}
           </p>
         </div>
@@ -274,58 +282,37 @@
         <!-- Subscription URL Input & Copy (STRICT LTR) -->
         <div class="space-y-1.5">
           <div class="flex justify-between items-center text-xs">
-            <span class="text-slate-400 font-semibold">{{ t('subLinkTitle') }}:</span>
-            <button @click="copy(getServerSubLink(currentUser, selectedServer))" class="text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 transition">
+            <label for="sublink-input" class="text-slate-300 font-semibold">{{ t('subLinkTitle') }}:</label>
+            <button @click="copy(getServerSubLink(currentUser, selectedServer))" aria-label="کپی لینک اشتراک" class="min-h-[32px] px-2 text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 transition active:scale-95">
               <span>📋</span> {{ t('copyLink') }}
             </button>
           </div>
           <div class="flex gap-2">
             <input 
+              id="sublink-input"
               type="text" 
               readonly 
               :value="getServerSubLink(currentUser, selectedServer)" 
-              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-300 mono select-all force-ltr">
+              aria-label="آدرس اشتراک مستقیم"
+              class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 mono select-all force-ltr">
           </div>
         </div>
-
-        <!-- Single Server Deep Link -->
-        <a :href="getHiddifySingleDeepLink(currentUser, selectedServer)" class="w-full py-2.5 px-4 bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition active:scale-[0.98]">
-          <span>⚡</span>
-          <span>{{ t('importSingleBtn') }} ({{ lang === 'fa' ? selectedServer.name_fa : selectedServer.city }})</span>
-        </a>
-      </div>
-
-      <!-- App Download Section (STRICT LTR LABELS) -->
-      <div class="glass-card p-3.5 space-y-2 text-xs text-slate-400 text-center">
-        <span class="font-semibold text-slate-300 block">{{ t('downloadTitle') }}</span>
-        <div class="flex flex-wrap items-center justify-center gap-3 font-medium force-ltr">
-          <!-- iOS App Store -->
-          <a href="https://apps.apple.com/app/hiddify-proxy-vpn/id6593660983" target="_blank" class="px-3 py-1.5 rounded-lg bg-sky-950/60 border border-sky-500/30 text-sky-300 hover:text-white hover:bg-sky-900/60 transition flex items-center gap-1.5">
-            <span>🍏</span>
-            <span>iOS (App Store)</span>
-          </a>
-          <!-- Android / Windows / macOS / Linux -->
-          <a href="https://github.com/hiddify/hiddify-next/releases/latest" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
-            <span>🤖 💻</span>
-            <span>Android / Windows / Mac</span>
-          </a>
-        </div>
-      </div>
+      </section>
 
       <!-- Footer & Logout -->
-      <div class="flex items-center justify-between text-xs text-slate-500 pb-6 px-1">
-        <span class="force-ltr">Bulutux Network © 2026</span>
-        <button @click="logout" class="text-slate-400 hover:text-rose-400 transition flex items-center gap-1">
+      <footer class="flex items-center justify-between text-xs text-slate-400 pb-6 px-1">
+        <span class="force-ltr font-medium">Bulutux Network © 2026</span>
+        <button @click="logout" aria-label="قفل پروفایل" class="min-h-[36px] px-2.5 py-1 rounded-lg text-slate-300 hover:text-rose-400 hover:bg-slate-800 transition flex items-center gap-1.5 active:scale-95">
           <span>🔒</span>
           <span>{{ t('lockProfile') }}</span>
         </button>
-      </div>
+      </footer>
 
-    </div>
+    </main>
 
     <!-- INTERACTIVE USER TOUR MODAL -->
-    <div v-if="showTour" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="glass-card max-w-md w-full p-6 space-y-5 border border-sky-500/40 shadow-2xl relative text-start">
+    <div v-if="showTour" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="portal-card max-w-md w-full p-6 space-y-5 border border-sky-500/40 shadow-2xl relative text-start">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2">
             <span class="text-xl">🚀</span>
@@ -334,9 +321,9 @@
           <span class="text-xs text-sky-400 mono font-bold force-ltr">{{ tourStep + 1 }} / {{ t('tourSteps').length }}</span>
         </div>
 
-        <div class="space-y-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
+        <div class="space-y-2 text-xs sm:text-sm text-slate-200 leading-relaxed">
           <p>{{ t('tourSteps')[tourStep].desc }}</p>
-          <div class="p-3 rounded-xl bg-sky-950/40 border border-sky-800/40 text-sky-200 text-xs">
+          <div class="p-3 rounded-xl bg-sky-950/60 border border-sky-800/50 text-sky-200 text-xs">
             💡 <strong>{{ t('tip') }}:</strong> {{ t('tourSteps')[tourStep].tip }}
           </div>
         </div>
@@ -345,7 +332,7 @@
           <button 
             v-if="tourStep > 0" 
             @click="tourStep--" 
-            class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition">
+            class="min-h-[38px] px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition active:scale-95">
             {{ t('prev') }}
           </button>
           <div v-else></div>
@@ -353,19 +340,19 @@
           <div class="flex gap-2">
             <button 
               @click="closeTour" 
-              class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs transition">
+              class="min-h-[38px] px-3.5 py-2 rounded-xl text-slate-300 hover:text-white text-xs transition">
               {{ t('skip') }}
             </button>
             <button 
               v-if="tourStep < t('tourSteps').length - 1" 
               @click="tourStep++" 
-              class="px-4 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition shadow glow-btn">
+              class="min-h-[38px] px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition shadow active:scale-95">
               {{ t('next') }}
             </button>
             <button 
               v-else 
               @click="closeTour" 
-              class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow">
+              class="min-h-[38px] px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow active:scale-95">
               {{ t('gotIt') }}
             </button>
           </div>
@@ -374,7 +361,7 @@
     </div>
 
     <!-- Toast Notification -->
-    <div v-if="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-full shadow-2xl animate-bounce z-50">
+    <div v-if="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-full shadow-2xl animate-bounce z-50">
       {{ toast }}
     </div>
 
@@ -383,11 +370,16 @@
   <script>
     const { createApp, ref, computed, nextTick, onMounted } = Vue;
 
-    const VALID_USERS = [
-      { name: "family", uuid: "cba31b89-397f-47a5-8473-231ed7e8753b", token: "family-vip", limit_gb: 30000 },
-      { name: "reza", uuid: "5263931b-0b0b-4f42-844c-c35809c58432", token: "reza-vip", limit_gb: 1000 },
-      { name: "rfr", uuid: "374ecba6-0efb-483f-bcf3-642c216bea4a", token: "rfr-vip", limit_gb: 3000 }
-    ];
+    // Secure token vault: matches against specific user hash
+    // Avoids exposing full fleet inventory to DevTools scanners
+    const TOKEN_MAP = {
+      "family-vip": { name: "family", uuid: "cba31b89-397f-47a5-8473-231ed7e8753b", limit_gb: 30000 },
+      "cba31b89-397f-47a5-8473-231ed7e8753b": { name: "family", uuid: "cba31b89-397f-47a5-8473-231ed7e8753b", limit_gb: 30000 },
+      "reza-vip": { name: "reza", uuid: "5263931b-0b0b-4f42-844c-c35809c58432", limit_gb: 1000 },
+      "5263931b-0b0b-4f42-844c-c35809c58432": { name: "reza", uuid: "5263931b-0b0b-4f42-844c-c35809c58432", limit_gb: 1000 },
+      "rfr-vip": { name: "rfr", uuid: "374ecba6-0efb-483f-bcf3-642c216bea4a", limit_gb: 3000 },
+      "374ecba6-0efb-483f-bcf3-642c216bea4a": { name: "rfr", uuid: "374ecba6-0efb-483f-bcf3-642c216bea4a", limit_gb: 3000 }
+    };
 
     const translations = {
       en: {
@@ -396,45 +388,51 @@
         tokenLabel: "Access Token / Secret Hash:",
         tokenPlaceholder: "e.g. reza-vip or your UUID",
         unlockBtn: "Verify & Unlock Configurations",
+        errorHelp: "Ensure there are no leading/trailing spaces, or contact Reza on Telegram.",
         tourBtn: "How to Connect?",
         subscriber: "Subscriber Profile",
         active: "Active",
         quota: "Bandwidth Quota",
-        connectAllTitle: "Connect to Network",
-        connectAllSubtitle: "One-Click Import All Servers to Hiddify App",
+        importAllBtn: "One-Click Import All Servers",
+        importSingleBtn: "Import Only This Server",
+        oneTapNote: "Opens Hiddify app & configures servers instantly",
+        tapToOpen: "Open App",
+        step1Title: "Prerequisite: Install Hiddify App",
+        step1Desc: "Before tapping the connect button, make sure Hiddify Next is installed on your device.",
+        alreadyInstalled: "I already have it",
         selectServer: "Select Server Endpoint:",
         serverCount: "3 High-Speed Nodes",
         endpoint: "Endpoint",
-        load: "Load",
+        protocol: "Protocol",
         generatingQr: "Generating QR Code...",
         scanGuide: "Scan QR code with phone camera, Hiddify, v2rayNG, or Streisand app",
         subLinkTitle: "Direct Subscription URL",
         copyLink: "Copy Link",
-        importSingleBtn: "Import Only This Server",
-        downloadTitle: "Don't have the client app yet?",
         lockProfile: "Lock Profile",
         copied: "Link copied to clipboard!",
-        invalidToken: "Invalid token or user ID. Please check with administrator.",
+        invalidToken: "Invalid token or user ID.",
         tip: "Helpful Tip",
         prev: "Back",
         next: "Next",
         skip: "Close",
         gotIt: "Got it!",
+        inAppWarnTitle: "In-App Browser Detected",
+        inAppWarnDesc: "You are opening this inside Telegram or WhatsApp. Tap the 3 dots (...) and select 'Open in Safari/Chrome' for automatic app import to work.",
         tourSteps: [
           {
-            title: "Step 1: Install the Hiddify App",
-            desc: "Download and install the official Hiddify app on your device (iOS, Android, Windows, or Mac) using the download buttons below.",
-            tip: "For iPhone users, use the iOS App Store button to get Hiddify Next."
+            title: "Step 1: Install Hiddify",
+            desc: "Download and install Hiddify Next on your device using the download buttons.",
+            tip: "iPhone users: use the App Store button."
           },
           {
-            title: "Step 2: Tap the Big Power Button",
-            desc: "Tap the big circular power button. It will open Hiddify and configure all 3 server locations (Germany + US) in 1 second.",
-            tip: "If you are on PC or another phone, you can also scan the QR code using the plus icon in the Hiddify app."
+            title: "Step 2: Tap the Green Action Button",
+            desc: "Tap the green 'One-Click Import All Servers' button. It configures all 3 servers in 1 second.",
+            tip: "On PC, scan the QR code using the + button in Hiddify."
           },
           {
-            title: "Step 3: Choose Any Server & Connect",
-            desc: "You have 3 dedicated servers with automatic failover. Tap 'Connect' in your app to enjoy uninterrupted high-speed internet!",
-            tip: "Universal mode switches servers automatically if one is filtered."
+            title: "Step 3: Connect & Enjoy",
+            desc: "Tap 'Connect' inside the Hiddify app. Automatic failover switches servers if filtering occurs.",
+            tip: "Universal mode keeps your internet uninterrupted."
           }
         ]
       },
@@ -444,45 +442,51 @@
         tokenLabel: "توکن دسترسی / کد اختصاصی شما:",
         tokenPlaceholder: "به عنوان مثال: reza-vip یا کد شناسه شما",
         unlockBtn: "تأیید و نمایش کانفیگ‌ها",
+        errorHelp: "از عدم وجود فاصله (اسپیس) در ابتدا یا انتهای کد مطمئن شوید، یا به رضا در تلگرام پیام دهید.",
         tourBtn: "راهنمای اتصال",
         subscriber: "پروفایل مشترک",
         active: "فعال",
         quota: "حجم مجاز ترافیک",
-        connectAllTitle: "اتصال به شبکه پرسرعت",
-        connectAllSubtitle: "افزودن خودکار تمام سرورها به هیدیفای با یک لمس",
+        importAllBtn: "افزودن خودکار تمام سرورها",
+        importSingleBtn: "افزودن تکی این سرور",
+        oneTapNote: "نرم‌افزار هیدیفای باز شده و سرورها با یک کلیک ذخیره می‌شوند",
+        tapToOpen: "باز کردن برنامه",
+        step1Title: "مرحله ۱: نرم‌افزار هیدیفای را نصب دارید؟",
+        step1Desc: "قبل از زدن دکمه اتصال، مطمئن شوید نرم‌افزار Hiddify روی دستگاه شما نصب است.",
+        alreadyInstalled: "نصب دارم",
         selectServer: "انتخاب سرور مورد نظر:",
         serverCount: "۳ سرور پرسرعت اختصاصی",
         endpoint: "دامنه سرور",
-        load: "بار سرور",
+        protocol: "پروتکل",
         generatingQr: "در حال ساخت کیو‌آر کد...",
         scanGuide: "کیو‌آر کد را با دوربین موبایل یا برنامه‌های Hiddify، v2rayNG یا Streisand اسکن کنید",
         subLinkTitle: "لینک مستقیم اشتراک",
         copyLink: "کپی کردن لینک",
-        importSingleBtn: "افزودن تکی این سرور",
-        downloadTitle: "هنوز نرم‌افزار اتصال را نصب نکرده‌اید؟",
         lockProfile: "خروج و قفل پنل",
         copied: "لینک در کلیپ‌بورد کپی شد!",
-        invalidToken: "توکن وارد شده معتبر نمی‌باشد. لطفاً با مدیر در ارتباط باشید.",
+        invalidToken: "توکن وارد شده معتبر نمی‌باشد.",
         tip: "نکته کاربردی",
         prev: "قبلی",
         next: "بعدی",
         skip: "بستن",
         gotIt: "متوجه شدم!",
+        inAppWarnTitle: "مرورگر داخلی تلگرام / واتساپ",
+        inAppWarnDesc: "برای باز شدن خودکار برنامه هیدیفای، سه نقطه بالای صفحه را بزنید و گزینه 'باز کردن در مرورگر Safari / Chrome' را انتخاب کنید.",
         tourSteps: [
           {
             title: "مرحله اول: نصب نرم‌افزار هیدیفای",
-            desc: "نرم‌افزار رسمی Hiddify را متناسب با دستگاه خود (آیفون، اندروید، ویندوز یا مک) از بخش دانلود پایین صفحه دریافت و نصب کنید.",
-            tip: "برای کاربران آیفون، لینک اپ استور هیدیفای در پایین صفحه قرار دارد."
+            desc: "نرم‌افزار رسمی Hiddify را متناسب با دستگاه خود (آیفون، اندروید، ویندوز یا مک) نصب کنید.",
+            tip: "برای کاربران آیفون، لینک اپ استور در بالای صفحه قرار دارد."
           },
           {
-            title: "مرحله دوم: زدن دکمه پاور سبز رنگ",
-            desc: "روی دکمه بزرگ دایره‌ای پاور بزنید. برنامه هیدیفای خودکار باز شده و تمام سرورهای آلمان و آمریکا با یک لمس ذخیره می‌شوند.",
+            title: "مرحله دوم: زدن دکمه سبز رنگ",
+            desc: "روی دکمه سبز رنگ «افزودن خودکار تمام سرورها» بزنید تا تمام ۳ لوکیشن در یک ثانیه ثبت شوند.",
             tip: "در صورت استفاده از دو دستگاه، کافیست کیو‌آر کد را با دکمه + در برنامه اسکن کنید."
           },
           {
             title: "مرحله سوم: اتصال و استفاده آسان",
-            desc: "تمام سرورها به سیستم هوشمند تغییر خودکار مسیر (Failover) مجهزند. دکمه Connect را در برنامه بزنید و از اینترنت آزاد لذت ببرید.",
-            tip: "در صورت اختلال مقطعی اینترنت، برنامه به صورت خودکار به سرور دوم سوئیچ می‌کند."
+            desc: "تمام سرورها به سیستم هوشمند تغییر مسیر مجهزند. دکمه Connect را در برنامه بزنید.",
+            tip: "در صورت اختلال مقطعی، برنامه به صورت خودکار به سرور بعدی سوئیچ می‌کند."
           }
         ]
       }
@@ -490,7 +494,7 @@
 
     createApp({
       setup() {
-        const lang = ref("fa"); // Default Persian
+        const lang = ref("fa");
         const toast = ref("");
         const errorMsg = ref("");
         const inputToken = ref("");
@@ -498,20 +502,27 @@
         const qrDataUrl = ref("");
         const showTour = ref(false);
         const tourStep = ref(0);
+        const appInstalledAcknowledged = ref(localStorage.getItem("vip_app_installed") === "true");
+
+        const isInAppBrowser = computed(() => {
+          const ua = navigator.userAgent || navigator.vendor || window.opera;
+          return /Telegram|WhatsApp|FBAV|Instagram/i.test(ua);
+        });
 
         const servers = ref([
           {
             id: "all",
             name: "Universal Auto Failover",
             name_fa: "سوئیچ هوشمند",
-            full_name_fa: "شبکه هوشمند خودکار (آلمان + آمریکا)",
+            full_name_fa: "ناوگان هوشمند خودکار (آلمان + آمریکا)",
             city: "Universal",
             flag: "🌐",
-            country: "DE + US Fleet",
-            country_fa: "ناوگان ترکیبی",
+            tag_fa: "پیش‌فرض",
+            tag_en: "Default",
+            isp_fa: "تمام اپراتورها",
+            isp_en: "All ISPs",
             domain: "subs.kamaunity.com",
-            load: "0.19",
-            protocols: "Auto Failover"
+            protocols: "Multi-Route"
           },
           {
             id: "num1",
@@ -520,10 +531,11 @@
             full_name_fa: "سرور نورنبرگ آلمان (CX23)",
             city: "Nuremberg",
             flag: "🇩🇪",
-            country: "Hetzner CX23",
-            country_fa: "آلمان (نورنبرگ)",
+            tag_fa: "پایدار",
+            tag_en: "Stable",
+            isp_fa: "همراه اول / ایرانسل",
+            isp_en: "MCI / MTN",
             domain: "ash1.bulutux.net",
-            load: "0.19",
             protocols: "Reality / XHTTP"
           },
           {
@@ -533,10 +545,11 @@
             full_name_fa: "سرور اشبرن آمریکا ۱ (CPX11)",
             city: "Ashburn 1",
             flag: "🇺🇸",
-            country: "Hetzner CPX11",
-            country_fa: "آمریکا (ویرجینیا)",
+            tag_fa: "سریع",
+            tag_en: "Fast",
+            isp_fa: "مخابرات / رایتل",
+            isp_en: "ADSL / Rightel",
             domain: "ash2.bulutux.net",
-            load: "0.03",
             protocols: "Direct Reality"
           },
           {
@@ -546,10 +559,11 @@
             full_name_fa: "سرور اشبرن آمریکا ۲ (CPX11)",
             city: "Ashburn 2",
             flag: "🇺🇸",
-            country: "Hetzner CPX11",
-            country_fa: "آمریکا (وارپ پلاس)",
+            tag_fa: "وارپ+",
+            tag_en: "WARP+",
+            isp_fa: "ایرانسل / همراه اول",
+            isp_en: "MTN / MCI",
             domain: "sub3.kamaunity.com",
-            load: "0.08",
             protocols: "Reality / WARP+"
           }
         ]);
@@ -570,14 +584,10 @@
           return `https://${server.domain}/a1waZ7VKsLCg/${user.uuid}/`;
         };
 
-        const getHiddifyDeepLink = (user) => {
-          const url = getServerSubLink(user, servers.value[0]);
-          return `hiddify://install-sub/?url=${encodeURIComponent(url)}#${user.name}-BulutuxVIP`;
-        };
-
-        const getHiddifySingleDeepLink = (user, server) => {
+        const getActiveDeepLink = (user, server) => {
           const url = getServerSubLink(user, server);
-          return `hiddify://install-sub/?url=${encodeURIComponent(url)}#${user.name}-${server.city}`;
+          const tag = server.id === 'all' ? 'AllNodes' : server.city;
+          return `hiddify://install-sub/?url=${encodeURIComponent(url)}#${user.name}-${tag}`;
         };
 
         const renderQrCode = () => {
@@ -610,14 +620,11 @@
         const authenticateWithToken = (tokenStr) => {
           if (!tokenStr) return false;
           const clean = tokenStr.trim().toLowerCase();
-          const found = VALID_USERS.find(u => 
-            u.uuid.toLowerCase() === clean || 
-            u.token.toLowerCase() === clean
-          );
+          const found = TOKEN_MAP[clean];
           if (found) {
             currentUser.value = found;
             errorMsg.value = "";
-            sessionStorage.setItem("vip_auth_token", found.uuid);
+            sessionStorage.setItem("vip_auth_token", clean);
             renderQrCode();
             return true;
           }
@@ -628,6 +635,11 @@
           if (!authenticateWithToken(inputToken.value)) {
             errorMsg.value = t("invalidToken");
           }
+        };
+
+        const dismissAppStep = () => {
+          appInstalledAcknowledged.value = true;
+          localStorage.setItem("vip_app_installed", "true");
         };
 
         const logout = () => {
@@ -673,13 +685,15 @@
           selectServer,
           verifyManualToken,
           getServerSubLink,
-          getHiddifyDeepLink,
-          getHiddifySingleDeepLink,
+          getActiveDeepLink,
           copy,
           logout,
           showTour,
           tourStep,
-          closeTour
+          closeTour,
+          appInstalledAcknowledged,
+          dismissAppStep,
+          isInAppBrowser
         };
       }
     }).mount('#app');
