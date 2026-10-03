@@ -22,9 +22,15 @@
       min-height: 100vh;
       -webkit-tap-highlight-color: transparent;
     }
-    .font-fa { font-family: var(--font-fa); }
-    .font-en { font-family: var(--font-en); }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    .font-fa, .font-fa * { 
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; 
+    }
+    .font-en, .font-en * { 
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    }
+    .mono, .mono *, .force-ltr, .force-ltr * { 
+      font-family: 'JetBrains Mono', monospace !important; 
+    }
     
     /* Strict LTR forcing for links, inputs, and tech IDs */
     .force-ltr {
@@ -98,8 +104,8 @@
     }
   </style>
 </head>
-<body :class="lang === 'fa' ? 'font-fa' : 'font-en'" :dir="lang === 'fa' ? 'rtl' : 'ltr'" class="p-3 sm:p-5 flex flex-col items-center justify-center min-h-screen">
-  <div id="app" class="max-w-xl w-full space-y-4 my-auto">
+<body class="p-3 sm:p-5 flex flex-col items-center justify-center min-h-screen">
+  <div id="app" :class="lang === 'fa' ? 'font-fa' : 'font-en'" :dir="lang === 'fa' ? 'rtl' : 'ltr'" class="max-w-xl w-full space-y-4 my-auto">
 
     <!-- Top Bar: Avatar + Lang Switcher + Tour Button -->
     <div class="flex items-center justify-between px-1">
