@@ -109,14 +109,17 @@
 
     <!-- Top Bar: Avatar + Lang Switcher + Tour Button -->
     <div class="flex items-center justify-between px-1">
-      <div class="flex items-center gap-2.5">
-        <img src="avatar.jpg" alt="Bulutux" class="w-10 h-10 rounded-full border-2 border-sky-400 shadow-md object-cover">
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <img src="avatar.jpg" alt="Bulutux" class="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl border-2 border-sky-400/80 shadow-lg shadow-sky-500/20 object-cover">
+          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900 shadow"></span>
+        </div>
         <div>
-          <div class="text-xs font-bold text-white flex items-center gap-1.5">
+          <div class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
             <span>Bulutux Network</span>
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           </div>
-          <div class="text-[10px] text-slate-400">Secure Fleet Manager</div>
+          <div class="text-xs text-sky-400/90 font-medium">VIP Fleet Infrastructure</div>
+          <div class="text-[10px] text-slate-400">All Nodes Active • Failover Ready</div>
         </div>
       </div>
 
