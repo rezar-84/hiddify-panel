@@ -335,6 +335,53 @@
           <span class="text-xs text-sky-400 mono font-bold force-ltr">{{ tourStep + 1 }} / {{ t('tourSteps').length }}</span>
         </div>
 
+        <!-- Visual Diagram for Current Step -->
+        <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800 flex items-center justify-center min-h-[140px]">
+          <!-- Illustration 1: App Installation -->
+          <div v-if="tourStep === 0" class="flex flex-col items-center gap-2.5 text-center">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-sky-950 border border-sky-500/50 flex items-center justify-center text-2xl shadow-lg">
+                🍏
+              </div>
+              <span class="text-slate-500 font-bold">+</span>
+              <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center text-2xl shadow-lg">
+                🤖
+              </div>
+            </div>
+            <div class="text-[11px] text-sky-400 font-semibold">
+              Hiddify Next • Official Client
+            </div>
+          </div>
+
+          <!-- Illustration 2: 1-Click Import Action -->
+          <div v-else-if="tourStep === 1" class="flex flex-col items-center gap-2 text-center w-full max-w-xs">
+            <div class="w-full p-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between text-xs font-bold shadow-md">
+              <span class="flex items-center gap-1.5">⚡ {{ t('importAllBtn') }}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-black/25">Open App ↗</span>
+            </div>
+            <div class="text-[10px] text-emerald-400 font-medium">
+              {{ lang === 'fa' ? 'یک کلیک = افزودن تمام ۳ سرور' : '1 Click = All 3 Servers Imported' }}
+            </div>
+          </div>
+
+          <!-- Illustration 3: Live Connect & Failover -->
+          <div v-else-if="tourStep === 2" class="flex flex-col items-center gap-2.5 text-center">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white flex items-center gap-1">
+                🇩🇪 DE (Reality)
+              </span>
+              <span class="text-emerald-400 font-bold">⇄</span>
+              <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white flex items-center gap-1">
+                🇺🇸 US (WARP+)
+              </span>
+            </div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 border border-emerald-600/40 text-emerald-300 text-[11px] font-bold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              {{ lang === 'fa' ? 'سوئیچ خودکار در صورت قطعی' : 'Automatic Smart Failover' }}
+            </div>
+          </div>
+        </div>
+
         <div class="space-y-2 text-xs sm:text-sm text-slate-200 leading-relaxed">
           <p>{{ t('tourSteps')[tourStep].desc }}</p>
           <div class="p-3 rounded-xl bg-sky-950/60 border border-sky-800/50 text-sky-200 text-xs">
