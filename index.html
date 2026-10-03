@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,32 +7,94 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <style>
+    :root {
+      --font-fa: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-en: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
     body {
       background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
       color: #f8fafc;
       min-height: 100vh;
       -webkit-tap-highlight-color: transparent;
     }
-    .font-en { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-fa { font-family: 'Vazirmatn', sans-serif; }
+    .font-fa { font-family: var(--font-fa); }
+    .font-en { font-family: var(--font-en); }
     .mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Strict LTR forcing for links, inputs, and tech IDs */
+    .force-ltr {
+      direction: ltr !important;
+      text-align: left !important;
+      unicode-bidi: isolate;
+    }
+
     .glass-card {
       background: rgba(15, 23, 42, 0.78);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
+      border-radius: 20px;
     }
-    .glow-btn {
-      box-shadow: 0 0 20px -5px rgba(56, 189, 248, 0.4);
+
+    /* Big Circular Power Button with Neon Ripple */
+    .power-btn-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem 0 0.5rem 0;
     }
-    .step-active {
-      box-shadow: 0 0 0 2px #38bdf8, 0 10px 25px -5px rgba(56, 189, 248, 0.3);
+    .power-btn-glow-ring {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.35) 0%, rgba(14, 165, 233, 0.1) 70%, transparent 100%);
+      animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    .power-btn {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 45%, #0284c7 100%);
+      border: 3px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 35px -5px rgba(16, 185, 129, 0.65), 0 10px 25px -5px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+    .power-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 45px 0px rgba(16, 185, 129, 0.85), inset 0 2px 6px rgba(255, 255, 255, 0.6);
+    }
+    .power-btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 20px -2px rgba(16, 185, 129, 0.5);
+    }
+    .power-icon {
+      width: 44px;
+      height: 44px;
+      stroke: #ffffff;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(0.95); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 0.25; }
     }
   </style>
 </head>
@@ -44,7 +106,7 @@
       <div class="flex items-center gap-2.5">
         <img src="avatar.jpg" alt="Bulutux" class="w-10 h-10 rounded-full border-2 border-sky-400 shadow-md object-cover">
         <div>
-          <div class="text-xs font-bold text-white flex items-center gap-1">
+          <div class="text-xs font-bold text-white flex items-center gap-1.5">
             <span>Bulutux Network</span>
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           </div>
@@ -92,7 +154,7 @@
             v-model="inputToken" 
             type="text" 
             :placeholder="t('tokenPlaceholder')" 
-            class="w-full bg-slate-900/90 border border-slate-700 focus:border-sky-500 rounded-xl p-3 text-xs text-white mono outline-none transition">
+            class="w-full bg-slate-900/90 border border-slate-700 focus:border-sky-500 rounded-xl p-3 text-xs text-white mono outline-none transition force-ltr">
         </div>
         <button 
           type="submit" 
@@ -109,11 +171,13 @@
     <!-- STATE 2: Authorized User Dashboard -->
     <div v-else class="space-y-4">
 
-      <!-- Profile Overview Card -->
-      <div id="tour-profile" class="glass-card p-4 sm:p-5 space-y-3.5 transition-all duration-300">
-        <div class="flex items-center justify-between">
-          <div>
-            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{{ t('subscriber') }}</span>
+      <!-- Profile Overview Card with Big Power Button -->
+      <div id="tour-profile" class="glass-card p-5 space-y-4 text-center">
+        
+        <!-- Header Info -->
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <div class="text-start">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">{{ t('subscriber') }}</span>
             <h2 class="text-lg sm:text-xl font-bold text-white capitalize flex items-center gap-2">
               {{ currentUser.name }}
               <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-600/50">{{ t('active') }}</span>
@@ -121,15 +185,25 @@
           </div>
           <div class="text-end">
             <span class="text-[11px] text-slate-400 uppercase tracking-wider block">{{ t('quota') }}</span>
-            <span class="text-sm font-bold text-sky-400 mono">{{ currentUser.limit_gb.toLocaleString() }} GB</span>
+            <span class="text-sm font-bold text-sky-400 mono force-ltr inline-block">{{ currentUser.limit_gb.toLocaleString() }} GB</span>
           </div>
         </div>
 
-        <!-- 1-Click Multi-Server Import -->
-        <a id="tour-oneclick" :href="getHiddifyDeepLink(currentUser)" class="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition shadow-lg glow-btn active:scale-[0.98]">
-          <span class="text-base">⚡</span>
-          <span>{{ t('importAllBtn') }}</span>
-        </a>
+        <!-- BIG CIRCULAR POWER BUTTON (Main 1-Click Action) -->
+        <div id="tour-oneclick" class="power-btn-container">
+          <div class="power-btn-glow-ring"></div>
+          <a :href="getHiddifyDeepLink(currentUser)" class="power-btn" :title="t('importAllBtn')">
+            <svg class="power-icon" viewBox="0 0 24 24">
+              <path d="M12 2v10"></path>
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            </svg>
+          </a>
+          <div class="mt-3.5 space-y-0.5">
+            <span class="text-sm sm:text-base font-extrabold text-white block tracking-wide">{{ t('connectAllTitle') }}</span>
+            <span class="text-[11px] text-slate-400 block">{{ t('connectAllSubtitle') }}</span>
+          </div>
+        </div>
+
       </div>
 
       <!-- Server Selector Grid -->
@@ -148,7 +222,7 @@
             class="p-2.5 rounded-xl border text-start transition flex flex-col justify-between space-y-1.5 active:scale-95">
             <div class="flex items-center justify-between">
               <span class="text-lg">{{ srv.flag }}</span>
-              <span class="text-[10px] font-mono text-emerald-400 font-bold">{{ srv.load }}</span>
+              <span class="text-[10px] font-mono text-emerald-400 font-bold force-ltr inline-block">{{ srv.load }}</span>
             </div>
             <div>
               <div class="font-bold text-xs text-white truncate">{{ lang === 'fa' ? srv.name_fa : srv.city }}</div>
@@ -165,12 +239,15 @@
             <span class="text-2xl">{{ selectedServer.flag }}</span>
             <div>
               <h3 class="text-sm sm:text-base font-bold text-white">{{ lang === 'fa' ? selectedServer.full_name_fa : selectedServer.name }}</h3>
-              <p class="text-[11px] text-slate-400">{{ t('endpoint') }}: <span class="text-sky-300 mono">{{ selectedServer.domain }}</span></p>
+              <p class="text-[11px] text-slate-400">
+                <span>{{ t('endpoint') }}: </span>
+                <span class="text-sky-300 mono force-ltr inline-block">{{ selectedServer.domain }}</span>
+              </p>
             </div>
           </div>
           <div class="text-end">
             <span class="text-[10px] text-slate-400 uppercase tracking-wider block">{{ t('load') }}</span>
-            <span class="text-xs font-mono font-bold text-emerald-400">{{ selectedServer.load }}</span>
+            <span class="text-xs font-mono font-bold text-emerald-400 force-ltr inline-block">{{ selectedServer.load }}</span>
           </div>
         </div>
 
@@ -185,7 +262,7 @@
           </p>
         </div>
 
-        <!-- Subscription URL Input & Copy -->
+        <!-- Subscription URL Input & Copy (STRICT LTR) -->
         <div class="space-y-1.5">
           <div class="flex justify-between items-center text-xs">
             <span class="text-slate-400 font-semibold">{{ t('subLinkTitle') }}:</span>
@@ -198,7 +275,7 @@
               type="text" 
               readonly 
               :value="getServerSubLink(currentUser, selectedServer)" 
-              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-300 mono select-all">
+              class="w-full bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-300 mono select-all force-ltr">
           </div>
         </div>
 
@@ -209,11 +286,11 @@
         </a>
       </div>
 
-      <!-- App Download Section (FIXED iOS APP STORE LINK) -->
+      <!-- App Download Section (STRICT LTR LABELS) -->
       <div class="glass-card p-3.5 space-y-2 text-xs text-slate-400 text-center">
         <span class="font-semibold text-slate-300 block">{{ t('downloadTitle') }}</span>
-        <div class="flex flex-wrap items-center justify-center gap-3 font-medium">
-          <!-- iOS App Store (Official Hiddify Next Client) -->
+        <div class="flex flex-wrap items-center justify-center gap-3 font-medium force-ltr">
+          <!-- iOS App Store -->
           <a href="https://apps.apple.com/app/hiddify-proxy-vpn/id6593660983" target="_blank" class="px-3 py-1.5 rounded-lg bg-sky-950/60 border border-sky-500/30 text-sky-300 hover:text-white hover:bg-sky-900/60 transition flex items-center gap-1.5">
             <span>🍏</span>
             <span>iOS (App Store)</span>
@@ -228,7 +305,7 @@
 
       <!-- Footer & Logout -->
       <div class="flex items-center justify-between text-xs text-slate-500 pb-6 px-1">
-        <span>Bulutux Network © 2026</span>
+        <span class="force-ltr">Bulutux Network © 2026</span>
         <button @click="logout" class="text-slate-400 hover:text-rose-400 transition flex items-center gap-1">
           <span>🔒</span>
           <span>{{ t('lockProfile') }}</span>
@@ -239,13 +316,13 @@
 
     <!-- INTERACTIVE USER TOUR MODAL -->
     <div v-if="showTour" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="glass-card max-w-md w-full p-6 space-y-5 border border-sky-500/40 shadow-2xl relative">
+      <div class="glass-card max-w-md w-full p-6 space-y-5 border border-sky-500/40 shadow-2xl relative text-start">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2">
             <span class="text-xl">🚀</span>
             <h3 class="font-bold text-white text-base">{{ t('tourSteps')[tourStep].title }}</h3>
           </div>
-          <span class="text-xs text-sky-400 mono font-bold">{{ tourStep + 1 }} / {{ t('tourSteps').length }}</span>
+          <span class="text-xs text-sky-400 mono font-bold force-ltr">{{ tourStep + 1 }} / {{ t('tourSteps').length }}</span>
         </div>
 
         <div class="space-y-2 text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -314,7 +391,8 @@
         subscriber: "Subscriber Profile",
         active: "Active",
         quota: "Bandwidth Quota",
-        importAllBtn: "One-Click Import All Servers (Hiddify App)",
+        connectAllTitle: "Connect to Network",
+        connectAllSubtitle: "One-Click Import All Servers to Hiddify App",
         selectServer: "Select Server Endpoint:",
         serverCount: "3 High-Speed Nodes",
         endpoint: "Endpoint",
@@ -340,8 +418,8 @@
             tip: "For iPhone users, use the iOS App Store button to get Hiddify Next."
           },
           {
-            title: "Step 2: One-Click Instant Import",
-            desc: "Tap the green 'One-Click Import All Servers' button. It will open Hiddify and configure all 3 server locations (Germany + US) in 1 second.",
+            title: "Step 2: Tap the Big Power Button",
+            desc: "Tap the big circular power button. It will open Hiddify and configure all 3 server locations (Germany + US) in 1 second.",
             tip: "If you are on PC or another phone, you can also scan the QR code using the plus icon in the Hiddify app."
           },
           {
@@ -361,7 +439,8 @@
         subscriber: "پروفایل مشترک",
         active: "فعال",
         quota: "حجم مجاز ترافیک",
-        importAllBtn: "افزودن خودکار تمام سرورها (با یک کلیک)",
+        connectAllTitle: "اتصال به شبکه پرسرعت",
+        connectAllSubtitle: "افزودن خودکار تمام سرورها به هیدیفای با یک لمس",
         selectServer: "انتخاب سرور مورد نظر:",
         serverCount: "۳ سرور پرسرعت اختصاصی",
         endpoint: "دامنه سرور",
@@ -387,8 +466,8 @@
             tip: "برای کاربران آیفون، لینک اپ استور هیدیفای در پایین صفحه قرار دارد."
           },
           {
-            title: "مرحله دوم: افزودن کانفیگ‌ها با یک کلیک",
-            desc: "روی دکمه سبز رنگ «افزودن خودکار تمام سرورها» بزنید. برنامه هیدیفای خودکار باز شده و تمام ۳ لوکیشن (آلمان و آمریکا) ثبت می‌شوند.",
+            title: "مرحله دوم: زدن دکمه پاور سبز رنگ",
+            desc: "روی دکمه بزرگ دایره‌ای پاور بزنید. برنامه هیدیفای خودکار باز شده و تمام سرورهای آلمان و آمریکا با یک لمس ذخیره می‌شوند.",
             tip: "در صورت استفاده از دو دستگاه، کافیست کیو‌آر کد را با دکمه + در برنامه اسکن کنید."
           },
           {
@@ -402,7 +481,7 @@
 
     createApp({
       setup() {
-        const lang = ref("fa"); // Default to Persian
+        const lang = ref("fa"); // Default Persian
         const toast = ref("");
         const errorMsg = ref("");
         const inputToken = ref("");
@@ -474,6 +553,8 @@
 
         const toggleLang = () => {
           lang.value = lang.value === 'en' ? 'fa' : 'en';
+          document.documentElement.lang = lang.value;
+          document.documentElement.dir = lang.value === 'fa' ? 'rtl' : 'ltr';
         };
 
         const getServerSubLink = (user, server) => {
