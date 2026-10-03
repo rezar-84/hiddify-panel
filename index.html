@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP Access Portal — bulutux.net</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+    }
+    .glow-btn {
+      box-shadow: 0 0 20px -5px rgba(56, 189, 248, 0.4);
+    }
+  </style>
+</head>
+<body class="p-3 md:p-6 flex flex-col items-center">
+  <div id="app" class="max-w-2xl w-full space-y-5">
+
+    <!-- Header Banner -->
+    <div class="text-center space-y-1.5 pt-2">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-950/70 border border-sky-500/30 text-sky-300 text-xs font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Multi-Node Network • Live Failover
+      </div>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-indigo-300 to-teal-300">
+        VIP Access Portal
+      </h1>
+      <p class="text-xs text-slate-400">
+        Select your user account to access server configurations & QR codes
+      </p>
+    </div>
+
+    <!-- User Selector Tabs -->
+    <div class="glass-card p-1.5 flex gap-1 justify-center">
+      <button 
+        v-for="u in users" 
+        :key="u.uuid" 
+        @click="selectUser(u)" 
+        :class="currentUser.uuid === u.uuid ? 'bg-sky-600 text-white font-bold shadow-md shadow-sky-600/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'"
+        class="flex-1 py-2 px-3 rounded-xl text-xs md:text-sm transition flex items-center justify-center gap-1.5">
+        <span>👤</span>
+        <span class="capitalize">{{ u.name }}</span>
+      </button>
+    </div>
+
+    <!-- Profile Overview Card -->
+    <div class="glass-card p-5 md:p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Subscriber</span>
+          <h2 class="text-xl font-bold text-white capitalize flex items-center gap-2">
+            {{ currentUser.name }}
+            <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-600/50">Active</span>
+          </h2>
+        </div>
+        <div class="text-right">
+          <span class="text-[11px] text-slate-400 uppercase tracking-wider block">Bandwidth Quota</span>
+          <span class="text-sm font-bold text-sky-400 mono">{{ currentUser.limit_gb.toLocaleString() }} GB</span>
+        </div>
+      </div>
+
+      <!-- Quick 1-Click Multi-Server Import -->
+      <a :href="getHiddifyDeepLink(currentUser)" class="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-xl text-xs md:text-sm font-bold flex items-center justify-center gap-2 transition shadow-lg glow-btn">
+        <span class="text-base">⚡</span>
+        <span>One-Click Import All Servers (Hiddify App)</span>
+      </a>
+    </div>
+
+    <!-- Server Selector Segmented Control -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Select Server Endpoint:</span>
+        <span class="text-[11px] text-slate-400">3 High-Speed Nodes</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <button 
+          v-for="srv in servers" 
+          :key="srv.id" 
+          @click="selectServer(srv)"
+          :class="selectedServer.id === srv.id ? 'ring-2 ring-sky-500 bg-sky-950/50 border-sky-500' : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'"
+          class="p-3 rounded-xl border text-left transition flex flex-col justify-between space-y-2">
+          
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-1.5 font-bold text-xs md:text-sm text-white">
+              <span>{{ srv.flag }}</span>
+              <span>{{ srv.city }}</span>
+            </div>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+
+          <div class="space-y-0.5 text-[11px]">
+            <div class="text-slate-400 flex justify-between">
+              <span>Location:</span>
+              <span class="text-slate-200 font-medium">{{ srv.country }}</span>
+            </div>
+            <div class="text-slate-400 flex justify-between">
+              <span>Server Load:</span>
+              <span class="text-emerald-400 font-mono font-bold">{{ srv.load }}</span>
+            </div>
+            <div class="text-slate-400 flex justify-between">
+              <span>Protocols:</span>
+              <span class="text-sky-300 font-mono text-[10px]">{{ srv.protocols }}</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Server QR Code & Links Card -->
+    <div class="glass-card p-6 space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">{{ selectedServer.flag }}</span>
+          <div>
+            <h3 class="text-sm md:text-base font-bold text-white">{{ selectedServer.name }}</h3>
+            <p class="text-xs text-slate-400">Direct subscription endpoint</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Load</span>
+          <span class="text-xs font-mono font-bold text-emerald-400">{{ selectedServer.load }}</span>
+        </div>
+      </div>
+
+      <!-- Live QR Code Display -->
+      <div class="flex flex-col items-center justify-center space-y-3 pt-1">
+        <div class="p-3 bg-white rounded-2xl shadow-xl flex items-center justify-center">
+          <canvas id="server-qrcode" class="max-w-[200px] max-h-[200px]"></canvas>
+        </div>
+        <p class="text-xs text-slate-400 text-center">
+          Scan QR code with your phone camera, <strong>Hiddify</strong>, <strong>v2rayNG</strong>, or <strong>Streisand</strong>
+        </p>
+      </div>
+
+      <!-- Config Link Input & Copy -->
+      <div class="space-y-1.5">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-slate-400 font-semibold">{{ selectedServer.name }} Subscription Link:</span>
+          <button @click="copy(getServerSubLink(currentUser, selectedServer))" class="text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 transition">
+            <span>📋</span> Copy Link
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <input 
+            type="text" 
+            readonly 
+            :value="getServerSubLink(currentUser, selectedServer)" 
+            class="w-full bg-slate-900/90 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-300 mono select-all">
+        </div>
+      </div>
+
+      <!-- Import Single Server Button -->
+      <a :href="getHiddifySingleDeepLink(currentUser, selectedServer)" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+        <span>⚡</span>
+        <span>Import Only {{ selectedServer.city }} Server</span>
+      </a>
+    </div>
+
+    <!-- App Download Links -->
+    <div class="text-center text-xs text-slate-500 space-y-1.5 pb-6">
+      <p>Need the client application?</p>
+      <div class="flex justify-center gap-3 text-sky-400 font-semibold">
+        <a href="https://github.com/hiddify/hiddify-next/releases/latest" target="_blank" class="hover:underline">Android / Windows / macOS</a>
+        <span>•</span>
+        <a href="https://apps.apple.com/us/app/hiddify-proxy-vpn/id6593660983" target="_blank" class="hover:underline">iOS App Store</a>
+      </div>
+    </div>
+
+    <!-- Toast Alert -->
+    <div v-if="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-full shadow-2xl animate-bounce">
+      {{ toast }}
+    </div>
+
+  </div>
+
+  <script>
+    const { createApp, ref, nextTick, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const toast = ref("");
+        const users = ref([
+          { name: "family", uuid: "cba31b89-397f-47a5-8473-231ed7e8753b", limit_gb: 30000 },
+          { name: "reza", uuid: "5263931b-0b0b-4f42-844c-c35809c58432", limit_gb: 1000 },
+          { name: "rfr", uuid: "374ecba6-0efb-483f-bcf3-642c216bea4a", limit_gb: 3000 }
+        ]);
+
+        const servers = ref([
+          {
+            id: "all",
+            name: "Universal Failover (All Servers)",
+            city: "Universal",
+            flag: "🌐",
+            country: "DE + US Fleet",
+            domain: "subs.kamaunity.com",
+            load: "0.19 (Low)",
+            protocols: "Auto Failover"
+          },
+          {
+            id: "num1",
+            name: "Germany Node 1 (Nuremberg)",
+            city: "Nuremberg",
+            flag: "🇩🇪",
+            country: "Germany (Hetzner CX23)",
+            domain: "ash1.bulutux.net",
+            load: "0.19 (Low)",
+            protocols: "Reality / XHTTP"
+          },
+          {
+            id: "ash2",
+            name: "USA East Node 2 (Ashburn)",
+            city: "Ashburn 1",
+            flag: "🇺🇸",
+            country: "USA East (Hetzner CPX11)",
+            domain: "ash2.bulutux.net",
+            load: "0.03 (Minimal)",
+            protocols: "Direct Reality"
+          },
+          {
+            id: "ash3",
+            name: "USA East Node 3 (Ashburn)",
+            city: "Ashburn 2",
+            flag: "🇺🇸",
+            country: "USA East (Hetzner CPX11)",
+            domain: "sub3.kamaunity.com",
+            load: "0.08 (Minimal)",
+            protocols: "Direct Reality / WARP+"
+          }
+        ]);
+
+        const currentUser = ref(users.value[0]);
+        const selectedServer = ref(servers.value[0]);
+
+        const getServerSubLink = (user, server) => {
+          return `https://${server.domain}/a1waZ7VKsLCg/${user.uuid}/`;
+        };
+
+        const getHiddifyDeepLink = (user) => {
+          const url = getServerSubLink(user, servers.value[0]);
+          return `hiddify://install-sub/?url=${encodeURIComponent(url)}#${user.name}-AllNodes`;
+        };
+
+        const getHiddifySingleDeepLink = (user, server) => {
+          const url = getServerSubLink(user, server);
+          return `hiddify://install-sub/?url=${encodeURIComponent(url)}#${user.name}-${server.city}`;
+        };
+
+        const renderQrCode = () => {
+          nextTick(() => {
+            const canvas = document.getElementById("server-qrcode");
+            if (canvas) {
+              const url = getServerSubLink(currentUser.value, selectedServer.value);
+              QRCode.toCanvas(canvas, url, { width: 200, margin: 1 }, (err) => {
+                if (err) console.error(err);
+              });
+            }
+          });
+        };
+
+        const selectUser = (u) => {
+          currentUser.value = u;
+          renderQrCode();
+        };
+
+        const selectServer = (s) => {
+          selectedServer.value = s;
+          renderQrCode();
+        };
+
+        const copy = (text) => {
+          navigator.clipboard.writeText(text);
+          toast.value = "Copied to clipboard!";
+          setTimeout(() => toast.value = "", 3000);
+        };
+
+        onMounted(() => {
+          const hash = window.location.hash.replace('#', '').toLowerCase();
+          const matched = users.value.find(x => x.name.toLowerCase() === hash);
+          if (matched) {
+            currentUser.value = matched;
+          }
+          renderQrCode();
+        });
+
+        return {
+          toast,
+          users,
+          servers,
+          currentUser,
+          selectedServer,
+          selectUser,
+          selectServer,
+          getServerSubLink,
+          getHiddifyDeepLink,
+          getHiddifySingleDeepLink,
+          copy
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
