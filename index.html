@@ -262,8 +262,9 @@
 
           <!-- Button Action Caption -->
           <div class="text-center mt-3.5 space-y-1">
-            <div class="text-sm sm:text-base font-extrabold text-white">
-              {{ selectedServer.id === 'all' ? t('importAllBtn') : t('importSingleBtn') + ' (' + (lang === 'fa' ? selectedServer.name_fa : selectedServer.city) + ')' }}
+            <div class="text-sm sm:text-base font-extrabold text-white flex items-center justify-center gap-1.5">
+              <span>{{ t('importServerBtn') }}</span>
+              <span class="text-emerald-400">({{ lang === 'fa' ? selectedServer.name_fa : selectedServer.city }})</span>
             </div>
             <div class="text-xs text-slate-400 font-medium">
               {{ t('oneTapNote') }}
@@ -280,7 +281,7 @@
           <span class="text-xs text-slate-400">{{ t('serverCount') }}</span>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div class="grid grid-cols-3 gap-2 sm:gap-2.5">
           <button 
             v-for="srv in servers" 
             :key="srv.id" 
@@ -416,12 +417,12 @@
             <div class="w-full p-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between text-xs font-bold shadow-md">
               <span class="flex items-center gap-1.5">
                 <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                <span>{{ t('importAllBtn') }}</span>
+                <span>{{ t('importServerBtn') }}</span>
               </span>
               <span class="text-[10px] px-2 py-0.5 rounded bg-black/25">Open App ↗</span>
             </div>
             <div class="text-[10px] text-emerald-400 font-medium">
-              {{ lang === 'fa' ? 'یک کلیک = افزودن تمام سرورها' : '1 Click = All Servers Imported' }}
+              {{ lang === 'fa' ? 'یک کلیک = ذخیره سرور در برنامه' : '1 Click = Server Saved in App' }}
             </div>
           </div>
 
@@ -518,13 +519,12 @@
         subscriber: "Subscriber Profile",
         active: "Active",
         quota: "Bandwidth Quota",
-        importAllBtn: "One-Click Import All Servers",
-        importSingleBtn: "Import Only This Server",
-        oneTapNote: "Opens Hiddify app & saves servers instantly",
+        importServerBtn: "One-Click Import Server",
+        oneTapNote: "Opens Hiddify app & saves server instantly",
         tapToOpen: "Open App",
         needAppQuestion: "Need to install the Hiddify app?",
         selectServer: "Select Server Endpoint:",
-        serverCount: "3 High-Speed Nodes",
+        serverCount: "3 Dedicated Locations",
         endpoint: "Endpoint",
         protocol: "Protocol",
         generatingQr: "Generating QR Code...",
@@ -549,13 +549,13 @@
           },
           {
             title: "Step 2: Tap the Lightning Button",
-            desc: "Tap the large circular lightning button. It configures all 3 servers in 1 second.",
+            desc: "Tap the large circular lightning button to instantly import your selected server into Hiddify.",
             tip: "On PC, scan the QR code using the + button in Hiddify."
           },
           {
-            title: "Step 3: Connect & Enjoy",
-            desc: "Tap 'Connect' inside the Hiddify app. Automatic failover switches servers if filtering occurs.",
-            tip: "Universal mode keeps your internet uninterrupted."
+            title: "Step 3: Connect & Switch Locations",
+            desc: "Tap 'Connect' inside the Hiddify app. You can switch between Germany and USA anytime.",
+            tip: "Germany is recommended for daily browsing and high stability."
           }
         ]
       },
@@ -570,13 +570,12 @@
         subscriber: "پروفایل مشترک",
         active: "فعال",
         quota: "حجم مجاز ترافیک",
-        importAllBtn: "افزودن خودکار تمام سرورها",
-        importSingleBtn: "افزودن تکی این سرور",
-        oneTapNote: "نرم‌افزار باز شده و سرورها با یک کلیک ذخیره می‌شوند",
+        importServerBtn: "افزودن مستقیم سرور",
+        oneTapNote: "نرم‌افزار باز شده و سرور با یک کلیک ذخیره می‌شود",
         tapToOpen: "باز کردن برنامه",
         needAppQuestion: "نرم‌افزار هیدیفای را نیاز به نصب دارید؟",
-        selectServer: "انتخاب سرور مورد نظر:",
-        serverCount: "۳ سرور پرسرعت اختصاصی",
+        selectServer: "انتخاب لوکیشن سرور:",
+        serverCount: "۳ لوکیشن اختصاصی",
         endpoint: "دامنه سرور",
         protocol: "پروتکل",
         generatingQr: "در حال ساخت کیو‌آر کد...",
@@ -601,13 +600,13 @@
           },
           {
             title: "مرحله دوم: زدن دکمه اتصال صاعقه",
-            desc: "روی دکمه دایره‌ای بزرگ صاعقه بزنید تا تمام سرورها در یک ثانیه در برنامه ثبت شوند.",
+            desc: "روی دکمه دایره‌ای بزرگ صاعقه بزنید تا لوکیشن انتخابی شما در یک ثانیه در برنامه هیدیفای ذخیره شود.",
             tip: "در صورت استفاده از کامپیوتر، کیو‌آر کد را با دکمه + در برنامه اسکن کنید."
           },
           {
-            title: "مرحله سوم: اتصال و استفاده آسان",
-            desc: "تمام سرورها به سیستم هوشمند تغییر مسیر مجهزند. دکمه Connect را در برنامه بزنید.",
-            tip: "در صورت اختلال مقطعی، برنامه به صورت خودکار به سرور بعدی سوئیچ می‌کند."
+            title: "مرحله سوم: اتصال و تغییر لوکیشن",
+            desc: "دکمه Connect را در برنامه بزنید. هر زمان تمایل داشتید می‌توانید بین آلمان و آمریکا جابجا شوید.",
+            tip: "سرور آلمان برای استفاده روزمره و پایداری بالا پیشنهاد می‌شود."
           }
         ]
       }
@@ -632,36 +631,22 @@
 
         const servers = ref([
           {
-            id: "all",
-            name: "Universal Auto Failover",
-            name_fa: "سوئیچ هوشمند",
-            full_name_fa: "ناوگان هوشمند خودکار (آلمان + آمریکا)",
-            city: "Universal",
-            flag: "🌐",
-            tag_fa: "پیش‌فرض",
-            tag_en: "Default",
-            isp_fa: "تمام اپراتورها",
-            isp_en: "All ISPs",
-            domain: "subs.kamaunity.com",
-            protocols: "Multi-Route"
-          },
-          {
             id: "num1",
-            name: "Germany Node 1",
-            name_fa: "آلمان ۱",
+            name: "Germany (Nuremberg)",
+            name_fa: "آلمان",
             full_name_fa: "سرور نورنبرگ آلمان (CX23)",
             city: "Nuremberg",
             flag: "🇩🇪",
-            tag_fa: "پایدار",
-            tag_en: "Stable",
+            tag_fa: "پیش‌فرض",
+            tag_en: "Default",
             isp_fa: "همراه اول / ایرانسل",
             isp_en: "MCI / MTN",
-            domain: "ash1.bulutux.net",
+            domain: "subs.kamaunity.com",
             protocols: "Reality / XHTTP"
           },
           {
             id: "ash2",
-            name: "USA East Node 2",
+            name: "USA East 1 (Ashburn)",
             name_fa: "آمریکا ۱",
             full_name_fa: "سرور اشبرن آمریکا ۱ (CPX11)",
             city: "Ashburn 1",
@@ -675,17 +660,17 @@
           },
           {
             id: "ash3",
-            name: "USA East Node 3",
+            name: "USA East 2 (Ashburn)",
             name_fa: "آمریکا ۲",
             full_name_fa: "سرور اشبرن آمریکا ۲ (CPX11)",
             city: "Ashburn 2",
             flag: "🇺🇸",
-            tag_fa: "وارپ+",
-            tag_en: "WARP+",
+            tag_fa: "پشتیبان",
+            tag_en: "Backup",
             isp_fa: "ایرانسل / همراه اول",
             isp_en: "MTN / MCI",
             domain: "sub3.kamaunity.com",
-            protocols: "Reality / WARP+"
+            protocols: "Reality / Direct"
           }
         ]);
 
