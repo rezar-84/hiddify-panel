@@ -55,37 +55,48 @@
     /* Purposeful elevated container */
     .portal-card {
       background: #111827;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
       padding: 1.25rem;
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
     }
 
-    /* Action button with authentic press feedback */
+    /* Tactile button feedback */
     .action-btn {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .action-btn:active {
-      transform: scale(0.98);
+      transform: scale(0.96);
+    }
+
+    /* Pulsing glow animation for master power connect button */
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 25px 2px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 45px 8px rgba(16, 185, 129, 0.65), inset 0 0 20px rgba(255, 255, 255, 0.35);
+      }
+    }
+    .power-btn {
+      animation: pulse-glow 3s infinite ease-in-out;
     }
   </style>
 </head>
 <body class="p-3 sm:p-5 flex flex-col items-center justify-center min-h-screen">
-  <div id="app" :class="lang === 'fa' ? 'font-fa' : 'font-en'" :dir="lang === 'fa' ? 'rtl' : 'ltr'" class="max-w-xl w-full space-y-4 my-auto">
+  <div id="app" :class="lang === 'fa' ? 'font-fa' : 'font-en'" :dir="lang === 'fa' ? 'rtl' : 'ltr'" class="max-w-md w-full space-y-4 my-auto">
 
-    <!-- Top Bar: Avatar + Lang Switcher + Tour Button -->
+    <!-- Top Bar: Avatar + Brand + Tour Button + Lang Switcher -->
     <header class="flex items-center justify-between px-1">
       <div class="flex items-center gap-3">
         <div class="relative">
-          <img src="avatar.jpg" alt="Bulutux" class="w-16 h-16 sm:w-18 sm:h-18 rounded-2xl border-2 border-sky-400/80 shadow-md object-cover">
-          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900 shadow" title="Online"></span>
+          <img src="avatar.jpg" alt="Bulutux" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 border-sky-400/80 shadow-md object-cover">
+          <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-900 shadow" title="Online"></span>
         </div>
         <div>
-          <div class="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
-            <span>Bulutux Network</span>
+          <div class="text-xl sm:text-2xl font-extrabold text-white tracking-wide">
+            Bulutux
           </div>
-          <div class="text-xs text-sky-400 font-semibold">VIP Fleet Infrastructure</div>
-          <div class="text-[11px] text-slate-300">All Nodes Active • Failover Ready</div>
         </div>
       </div>
 
@@ -94,9 +105,12 @@
         <button 
           v-if="currentUser"
           @click="showTour = true" 
-          aria-label="راهنمای اتصال"
-          class="min-h-[40px] px-3 py-2 rounded-xl bg-sky-950/80 border border-sky-500/40 text-sky-300 text-xs font-semibold hover:bg-sky-900 transition flex items-center gap-1.5 shadow-sm active:scale-95">
-          <span>💡</span>
+          :aria-label="t('tourBtn')"
+          class="min-h-[40px] px-3 py-2 rounded-xl bg-sky-950/70 border border-sky-500/40 text-sky-300 text-xs font-semibold hover:bg-sky-900/80 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+          <!-- Lightbulb SVG -->
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
           <span>{{ t('tourBtn') }}</span>
         </button>
 
@@ -105,15 +119,23 @@
           @click="toggleLang" 
           aria-label="تغییر زبان"
           class="min-h-[40px] px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold hover:bg-slate-700 transition flex items-center gap-1.5 shadow-sm active:scale-95">
-          <span>🌐</span>
+          <!-- Globe SVG -->
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
           <span>{{ lang === 'en' ? 'فارسی' : 'English' }}</span>
         </button>
       </div>
     </header>
 
     <!-- In-App Browser Warning (Telegram / WhatsApp) -->
-    <div v-if="isInAppBrowser" class="p-3.5 rounded-xl bg-amber-950/80 border border-amber-500/50 text-amber-200 text-xs flex items-start gap-2.5 shadow-md">
-      <span class="text-base">⚠️</span>
+    <div v-if="isInAppBrowser" class="p-3.5 rounded-2xl bg-amber-950/70 border border-amber-500/40 text-amber-200 text-xs flex items-start gap-2.5 shadow-md">
+      <!-- Alert Triangle SVG -->
+      <svg class="w-5 h-5 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
       <div class="leading-relaxed">
         <strong>{{ t('inAppWarnTitle') }}:</strong> {{ t('inAppWarnDesc') }}
       </div>
@@ -121,8 +143,12 @@
 
     <!-- STATE 1: Access Token Required (Locked Screen) -->
     <main v-if="!currentUser" class="portal-card p-6 sm:p-8 space-y-5 text-center shadow-xl">
-      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-sky-950/80 border border-sky-500/30 text-sky-400 text-2xl mx-auto shadow-inner">
-        🔒
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-sky-950/80 border border-sky-500/30 text-sky-400 mx-auto shadow-inner">
+        <!-- Lock SVG -->
+        <svg class="w-7 h-7 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
       </div>
       
       <div class="space-y-1.5">
@@ -150,55 +176,69 @@
         </button>
       </form>
 
-      <div v-if="errorMsg" class="p-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-xs text-start leading-relaxed">
-        <div class="font-bold mb-0.5">⚠️ {{ errorMsg }}</div>
-        <div class="text-[11px] text-rose-300">{{ t('errorHelp') }}</div>
+      <div v-if="errorMsg" class="p-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-xs text-start leading-relaxed flex items-start gap-2">
+        <svg class="w-4 h-4 text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <div>
+          <div class="font-bold mb-0.5">{{ errorMsg }}</div>
+          <div class="text-[11px] text-rose-300">{{ t('errorHelp') }}</div>
+        </div>
       </div>
     </main>
 
     <!-- STATE 2: Authorized User Dashboard -->
     <main v-else class="space-y-4">
 
-      <!-- STEP 1: Prerequisite App Check (Collapsible/Dismissible) -->
-      <section v-if="!appInstalledAcknowledged" class="portal-card p-4 space-y-3 border-sky-500/30">
+      <!-- Collapsed Step 1: Need App Download (Discreet Disclosure) -->
+      <section class="portal-card p-3 sm:p-4 space-y-3 border-slate-800 transition">
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-sky-900/80 text-sky-300 text-xs font-bold flex items-center justify-center border border-sky-500/40">۱</span>
-            <h2 class="text-xs sm:text-sm font-bold text-white">{{ t('step1Title') }}</h2>
-          </div>
-          <button @click="dismissAppStep" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1">
-            <span>✓</span> {{ t('alreadyInstalled') }}
+          <button @click="showAppDownloads = !showAppDownloads" class="text-xs text-slate-300 hover:text-white flex items-center gap-2 font-medium transition py-1">
+            <!-- Download Cloud SVG -->
+            <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>{{ t('needAppQuestion') }}</span>
+            <svg class="w-3.5 h-3.5 text-slate-400 transition transform" :class="showAppDownloads ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
         </div>
 
-        <p class="text-xs text-slate-300 leading-relaxed">
-          {{ t('step1Desc') }}
-        </p>
-
-        <div class="flex flex-wrap items-center gap-2.5 force-ltr">
-          <!-- iOS App Store -->
-          <a href="https://apps.apple.com/app/hiddify-proxy-vpn/id6593660983" target="_blank" rel="noopener noreferrer" class="min-h-[40px] px-3.5 py-2 rounded-xl bg-sky-950/80 border border-sky-500/40 text-sky-300 hover:text-white hover:bg-sky-900 transition flex items-center gap-2 text-xs font-semibold">
-            <span>🍏</span>
-            <span>Download for iOS (App Store)</span>
+        <!-- Download Buttons (Toggled) -->
+        <div v-if="showAppDownloads" class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center gap-2.5 force-ltr">
+          <!-- iOS App Store (Clean Apple SVG) -->
+          <a href="https://apps.apple.com/app/hiddify-proxy-vpn/id6593660983" target="_blank" rel="noopener noreferrer" class="min-h-[40px] px-3.5 py-2 rounded-xl bg-slate-900 border border-sky-500/40 text-sky-300 hover:text-white hover:bg-sky-950 transition flex items-center gap-2 text-xs font-semibold shadow-sm active:scale-95">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 170 170">
+              <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.74 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.66-7.74-11.89-14.1-6.19-9.35-11.19-20.03-15-32.04-3.8-12-5.71-23.75-5.71-35.24 0-14.35 3.65-26.4 10.96-36.14 7.3-9.74 16.57-14.74 27.81-15.01 4.58 0 9.74 1.25 15.48 3.75 5.75 2.5 9.74 3.8 11.97 3.89 1.74 0 5.86-1.39 12.37-4.17 6.51-2.77 12.08-3.95 16.71-3.54 12.44.98 22.37 5.65 29.79 14.01-10.87 6.53-16.19 15.54-15.96 27.04.22 9.03 3.69 16.7 10.42 23.01 6.73 6.31 14.77 9.89 24.12 10.74-1.85 5.88-4.08 11.75-6.7 17.62zM119.22 31.81c0-7.07 2.61-13.9 7.83-20.48 5.22-6.58 11.74-10.87 19.57-12.87.22 1.3.33 2.5.33 3.59 0 7.07-2.66 14.02-7.99 20.85-5.33 6.83-11.86 11.08-19.59 12.75-.11-1.08-.15-2.35-.15-3.84z"/>
+            </svg>
+            <span>iOS App Store</span>
           </a>
-          <!-- Android / Windows / macOS / Linux -->
-          <a href="https://github.com/hiddify/hiddify-next/releases/latest" target="_blank" rel="noopener noreferrer" class="min-h-[40px] px-3.5 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-200 hover:text-white hover:bg-slate-700 transition flex items-center gap-2 text-xs font-semibold">
-            <span>🤖 💻</span>
-            <span>Android / Windows / Mac</span>
+
+          <!-- Android / Desktop (Clean Devices Vector SVG) -->
+          <a href="https://github.com/hiddify/hiddify-next/releases/latest" target="_blank" rel="noopener noreferrer" class="min-h-[40px] px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 hover:text-white hover:bg-slate-800 transition flex items-center gap-2 text-xs font-semibold shadow-sm active:scale-95">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>Android / PC / Mac</span>
           </a>
         </div>
       </section>
 
-      <!-- STEP 2: One-Tap Primary Connection Action -->
-      <section id="tour-profile" class="portal-card p-5 space-y-4">
+      <!-- Primary Connection Card: Big Tactile Circular Lightning Button -->
+      <section id="tour-profile" class="portal-card p-5 sm:p-6 space-y-5">
         
-        <!-- Header Info -->
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <!-- Header Info (Clean & Focused) -->
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
           <div class="text-start">
             <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">{{ t('subscriber') }}</span>
             <h2 class="text-base sm:text-lg font-bold text-white capitalize flex items-center gap-2">
               {{ currentUser.name }}
-              <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-600/60 font-semibold">{{ t('active') }}</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-600/60 font-semibold">{{ t('active') }}</span>
             </h2>
           </div>
           <div class="text-end">
@@ -207,34 +247,33 @@
           </div>
         </div>
 
-        <!-- Primary Action Card (Replaces ambiguous power button with unified CTA) -->
-        <div id="tour-oneclick" class="space-y-2">
+        <!-- Master Power Button (Large Circular Connect with Lightning Icon) -->
+        <div id="tour-oneclick" class="flex flex-col items-center justify-center py-4">
           <a 
             :href="getActiveDeepLink(currentUser, selectedServer)" 
             :aria-label="t('importActionBtn') + ' ' + (lang === 'fa' ? selectedServer.full_name_fa : selectedServer.name)"
-            class="action-btn w-full min-h-[58px] p-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl shadow-lg flex items-center justify-between gap-3 text-start">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center text-xl shrink-0">
-                ⚡
-              </div>
-              <div>
-                <div class="text-sm sm:text-base font-extrabold text-white">
-                  {{ selectedServer.id === 'all' ? t('importAllBtn') : t('importSingleBtn') + ' (' + (lang === 'fa' ? selectedServer.name_fa : selectedServer.city) + ')' }}
-                </div>
-                <div class="text-xs text-emerald-100/90 font-medium">
-                  {{ t('oneTapNote') }}
-                </div>
-              </div>
-            </div>
-            <div class="text-xs px-2.5 py-1.5 rounded-lg bg-black/20 text-white font-bold shrink-0">
-              {{ t('tapToOpen') }} ↗
-            </div>
+            class="action-btn power-btn relative flex items-center justify-center w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-emerald-600 via-teal-500 to-emerald-400 hover:from-emerald-500 hover:to-teal-300 text-white border-4 border-slate-900 shadow-2xl active:scale-95 group transition duration-300">
+            
+            <!-- Sleek Electric Lightning Bolt SVG -->
+            <svg class="w-12 h-12 sm:w-14 sm:h-14 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] group-hover:scale-110 transition-transform duration-200" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
           </a>
+
+          <!-- Button Action Caption -->
+          <div class="text-center mt-3.5 space-y-1">
+            <div class="text-sm sm:text-base font-extrabold text-white">
+              {{ selectedServer.id === 'all' ? t('importAllBtn') : t('importSingleBtn') + ' (' + (lang === 'fa' ? selectedServer.name_fa : selectedServer.city) + ')' }}
+            </div>
+            <div class="text-xs text-slate-400 font-medium">
+              {{ t('oneTapNote') }}
+            </div>
+          </div>
         </div>
 
       </section>
 
-      <!-- Server Selector Grid (Tabs) -->
+      <!-- Server Selector Grid (Tabs with Emoji Flags) -->
       <section id="tour-servers" class="space-y-2">
         <div class="flex items-center justify-between px-1">
           <span class="text-xs font-bold text-slate-200 uppercase tracking-wider">{{ t('selectServer') }}</span>
@@ -248,29 +287,31 @@
             @click="selectServer(srv)"
             :aria-label="'انتخاب سرور ' + srv.city"
             :class="selectedServer.id === srv.id ? 'ring-2 ring-sky-400 bg-sky-950/80 border-sky-400 shadow-md' : 'bg-slate-900 border-slate-800 hover:border-slate-700'"
-            class="min-h-[68px] p-3 rounded-xl border text-start transition flex flex-col justify-between space-y-1.5 active:scale-95">
+            class="min-h-[66px] p-2.5 rounded-2xl border text-start transition flex flex-col justify-between space-y-1.5 active:scale-95">
             <div class="flex items-center justify-between">
+              <!-- Country Flag Emoji -->
               <span class="text-xl">{{ srv.flag }}</span>
-              <span class="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
+              <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
                 {{ lang === 'fa' ? srv.tag_fa : srv.tag_en }}
               </span>
             </div>
             <div>
               <div class="font-bold text-xs text-white truncate">{{ lang === 'fa' ? srv.name_fa : srv.city }}</div>
-              <div class="text-[11px] text-slate-300 truncate">{{ lang === 'fa' ? srv.isp_fa : srv.isp_en }}</div>
+              <div class="text-[11px] text-slate-400 truncate">{{ lang === 'fa' ? srv.isp_fa : srv.isp_en }}</div>
             </div>
           </button>
         </div>
       </section>
 
       <!-- Active Server QR Code & Details Card -->
-      <section id="tour-qrcode" class="portal-card p-4 sm:p-6 space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <section id="tour-qrcode" class="portal-card p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
           <div class="flex items-center gap-2.5">
+            <!-- Flag Emoji -->
             <span class="text-2xl">{{ selectedServer.flag }}</span>
             <div>
               <h3 class="text-sm sm:text-base font-bold text-white">{{ lang === 'fa' ? selectedServer.full_name_fa : selectedServer.name }}</h3>
-              <p class="text-xs text-slate-300">
+              <p class="text-xs text-slate-400">
                 <span>{{ t('endpoint') }}: </span>
                 <span class="text-sky-300 mono force-ltr inline-block font-semibold">{{ selectedServer.domain }}</span>
               </p>
@@ -282,23 +323,27 @@
           </div>
         </div>
 
-        <!-- Live QR Code Display (Soft dark frame to eliminate glare) -->
+        <!-- Live QR Code Display -->
         <div class="flex flex-col items-center justify-center space-y-2.5 pt-1">
           <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner flex items-center justify-center min-w-[210px] min-h-[210px]">
             <img v-if="qrDataUrl" :src="qrDataUrl" alt="QR Code" class="w-[200px] h-[200px] block rounded-lg bg-white p-1" />
             <div v-else class="text-xs text-slate-400 animate-pulse font-medium">{{ t('generatingQr') }}</div>
           </div>
-          <p class="text-xs text-slate-300 text-center leading-relaxed max-w-sm">
+          <p class="text-xs text-slate-400 text-center leading-relaxed max-w-sm">
             {{ t('scanGuide') }}
           </p>
         </div>
 
-        <!-- Subscription URL Input & Copy (STRICT LTR) -->
+        <!-- Subscription URL Input & Copy -->
         <div class="space-y-1.5">
           <div class="flex justify-between items-center text-xs">
             <label for="sublink-input" class="text-slate-300 font-semibold">{{ t('subLinkTitle') }}:</label>
-            <button @click="copy(getServerSubLink(currentUser, selectedServer))" aria-label="کپی لینک اشتراک" class="min-h-[32px] px-2 text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 transition active:scale-95">
-              <span>📋</span> {{ t('copyLink') }}
+            <button @click="copy(getServerSubLink(currentUser, selectedServer))" aria-label="کپی لینک اشتراک" class="min-h-[32px] px-2 text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1.5 transition active:scale-95">
+              <!-- Clipboard SVG -->
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+              </svg>
+              <span>{{ t('copyLink') }}</span>
             </button>
           </div>
           <div class="flex gap-2">
@@ -313,11 +358,15 @@
         </div>
       </section>
 
-      <!-- Footer & Logout -->
+      <!-- Footer & Lock -->
       <footer class="flex items-center justify-between text-xs text-slate-400 pb-6 px-1">
-        <span class="force-ltr font-medium">Bulutux Network © 2026</span>
+        <span class="force-ltr font-medium">Bulutux © 2026</span>
         <button @click="logout" aria-label="قفل پروفایل" class="min-h-[36px] px-2.5 py-1 rounded-lg text-slate-300 hover:text-rose-400 hover:bg-slate-800 transition flex items-center gap-1.5 active:scale-95">
-          <span>🔒</span>
+          <!-- Lock SVG -->
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
           <span>{{ t('lockProfile') }}</span>
         </button>
       </footer>
@@ -329,7 +378,10 @@
       <div class="portal-card max-w-md w-full p-6 space-y-5 border border-sky-500/40 shadow-2xl relative text-start">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div class="flex items-center gap-2">
-            <span class="text-xl">🚀</span>
+            <!-- Rocket SVG -->
+            <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m0 0L2 22l4.89-1.378" />
+            </svg>
             <h3 class="font-bold text-white text-base">{{ t('tourSteps')[tourStep].title }}</h3>
           </div>
           <span class="text-xs text-sky-400 mono font-bold force-ltr">{{ tourStep + 1 }} / {{ t('tourSteps').length }}</span>
@@ -340,12 +392,18 @@
           <!-- Illustration 1: App Installation -->
           <div v-if="tourStep === 0" class="flex flex-col items-center gap-2.5 text-center">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-2xl bg-sky-950 border border-sky-500/50 flex items-center justify-center text-2xl shadow-lg">
-                🍏
+              <div class="w-12 h-12 rounded-2xl bg-sky-950 border border-sky-500/50 flex items-center justify-center text-sky-400 shadow-lg">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 170 170">
+                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.74 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.66-7.74-11.89-14.1-6.19-9.35-11.19-20.03-15-32.04-3.8-12-5.71-23.75-5.71-35.24 0-14.35 3.65-26.4 10.96-36.14 7.3-9.74 16.57-14.74 27.81-15.01 4.58 0 9.74 1.25 15.48 3.75 5.75 2.5 9.74 3.8 11.97 3.89 1.74 0 5.86-1.39 12.37-4.17 6.51-2.77 12.08-3.95 16.71-3.54 12.44.98 22.37 5.65 29.79 14.01-10.87 6.53-16.19 15.54-15.96 27.04.22 9.03 3.69 16.7 10.42 23.01 6.73 6.31 14.77 9.89 24.12 10.74-1.85 5.88-4.08 11.75-6.7 17.62zM119.22 31.81c0-7.07 2.61-13.9 7.83-20.48 5.22-6.58 11.74-10.87 19.57-12.87.22 1.3.33 2.5.33 3.59 0 7.07-2.66 14.02-7.99 20.85-5.33 6.83-11.86 11.08-19.59 12.75-.11-1.08-.15-2.35-.15-3.84z"/>
+                </svg>
               </div>
               <span class="text-slate-500 font-bold">+</span>
-              <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center text-2xl shadow-lg">
-                🤖
+              <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center text-emerald-400 shadow-lg">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
               </div>
             </div>
             <div class="text-[11px] text-sky-400 font-semibold">
@@ -356,11 +414,14 @@
           <!-- Illustration 2: 1-Click Import Action -->
           <div v-else-if="tourStep === 1" class="flex flex-col items-center gap-2 text-center w-full max-w-xs">
             <div class="w-full p-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between text-xs font-bold shadow-md">
-              <span class="flex items-center gap-1.5">⚡ {{ t('importAllBtn') }}</span>
+              <span class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <span>{{ t('importAllBtn') }}</span>
+              </span>
               <span class="text-[10px] px-2 py-0.5 rounded bg-black/25">Open App ↗</span>
             </div>
             <div class="text-[10px] text-emerald-400 font-medium">
-              {{ lang === 'fa' ? 'یک کلیک = افزودن تمام ۳ سرور' : '1 Click = All 3 Servers Imported' }}
+              {{ lang === 'fa' ? 'یک کلیک = افزودن تمام سرورها' : '1 Click = All Servers Imported' }}
             </div>
           </div>
 
@@ -368,11 +429,11 @@
           <div v-else-if="tourStep === 2" class="flex flex-col items-center gap-2.5 text-center">
             <div class="flex items-center gap-2">
               <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white flex items-center gap-1">
-                🇩🇪 DE (Reality)
+                🇩🇪 DE
               </span>
               <span class="text-emerald-400 font-bold">⇄</span>
               <span class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white flex items-center gap-1">
-                🇺🇸 US (WARP+)
+                🇺🇸 US
               </span>
             </div>
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 border border-emerald-600/40 text-emerald-300 text-[11px] font-bold">
@@ -384,8 +445,13 @@
 
         <div class="space-y-2 text-xs sm:text-sm text-slate-200 leading-relaxed">
           <p>{{ t('tourSteps')[tourStep].desc }}</p>
-          <div class="p-3 rounded-xl bg-sky-950/60 border border-sky-800/50 text-sky-200 text-xs">
-            💡 <strong>{{ t('tip') }}:</strong> {{ t('tourSteps')[tourStep].tip }}
+          <div class="p-3 rounded-xl bg-sky-950/60 border border-sky-800/50 text-sky-200 text-xs flex items-start gap-1.5">
+            <svg class="w-4 h-4 text-sky-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <strong>{{ t('tip') }}:</strong> {{ t('tourSteps')[tourStep].tip }}
+            </div>
           </div>
         </div>
 
@@ -431,8 +497,6 @@
   <script>
     const { createApp, ref, computed, nextTick, onMounted } = Vue;
 
-    // Secure token vault: matches against specific user hash
-    // Avoids exposing full fleet inventory to DevTools scanners
     const TOKEN_MAP = {
       "family-vip": { name: "family", uuid: "cba31b89-397f-47a5-8473-231ed7e8753b", limit_gb: 30000 },
       "cba31b89-397f-47a5-8473-231ed7e8753b": { name: "family", uuid: "cba31b89-397f-47a5-8473-231ed7e8753b", limit_gb: 30000 },
@@ -456,17 +520,15 @@
         quota: "Bandwidth Quota",
         importAllBtn: "One-Click Import All Servers",
         importSingleBtn: "Import Only This Server",
-        oneTapNote: "Opens Hiddify app & configures servers instantly",
+        oneTapNote: "Opens Hiddify app & saves servers instantly",
         tapToOpen: "Open App",
-        step1Title: "Prerequisite: Install Hiddify App",
-        step1Desc: "Before tapping the connect button, make sure Hiddify Next is installed on your device.",
-        alreadyInstalled: "I already have it",
+        needAppQuestion: "Need to install the Hiddify app?",
         selectServer: "Select Server Endpoint:",
         serverCount: "3 High-Speed Nodes",
         endpoint: "Endpoint",
         protocol: "Protocol",
         generatingQr: "Generating QR Code...",
-        scanGuide: "Scan QR code with phone camera, Hiddify, v2rayNG, or Streisand app",
+        scanGuide: "Scan QR code with phone camera, Hiddify, or Streisand app",
         subLinkTitle: "Direct Subscription URL",
         copyLink: "Copy Link",
         lockProfile: "Lock Profile",
@@ -486,8 +548,8 @@
             tip: "iPhone users: use the App Store button."
           },
           {
-            title: "Step 2: Tap the Green Action Button",
-            desc: "Tap the green 'One-Click Import All Servers' button. It configures all 3 servers in 1 second.",
+            title: "Step 2: Tap the Lightning Button",
+            desc: "Tap the large circular lightning button. It configures all 3 servers in 1 second.",
             tip: "On PC, scan the QR code using the + button in Hiddify."
           },
           {
@@ -510,11 +572,9 @@
         quota: "حجم مجاز ترافیک",
         importAllBtn: "افزودن خودکار تمام سرورها",
         importSingleBtn: "افزودن تکی این سرور",
-        oneTapNote: "نرم‌افزار هیدیفای باز شده و سرورها با یک کلیک ذخیره می‌شوند",
+        oneTapNote: "نرم‌افزار باز شده و سرورها با یک کلیک ذخیره می‌شوند",
         tapToOpen: "باز کردن برنامه",
-        step1Title: "مرحله ۱: نرم‌افزار هیدیفای را نصب دارید؟",
-        step1Desc: "قبل از زدن دکمه اتصال، مطمئن شوید نرم‌افزار Hiddify روی دستگاه شما نصب است.",
-        alreadyInstalled: "نصب دارم",
+        needAppQuestion: "نرم‌افزار هیدیفای را نیاز به نصب دارید؟",
         selectServer: "انتخاب سرور مورد نظر:",
         serverCount: "۳ سرور پرسرعت اختصاصی",
         endpoint: "دامنه سرور",
@@ -537,12 +597,12 @@
           {
             title: "مرحله اول: نصب نرم‌افزار هیدیفای",
             desc: "نرم‌افزار رسمی Hiddify را متناسب با دستگاه خود (آیفون، اندروید، ویندوز یا مک) نصب کنید.",
-            tip: "برای کاربران آیفون، لینک اپ استور در بالای صفحه قرار دارد."
+            tip: "برای کاربران آیفون، دکمه اپ استور قرار داده شده است."
           },
           {
-            title: "مرحله دوم: زدن دکمه سبز رنگ",
-            desc: "روی دکمه سبز رنگ «افزودن خودکار تمام سرورها» بزنید تا تمام ۳ لوکیشن در یک ثانیه ثبت شوند.",
-            tip: "در صورت استفاده از دو دستگاه، کافیست کیو‌آر کد را با دکمه + در برنامه اسکن کنید."
+            title: "مرحله دوم: زدن دکمه اتصال صاعقه",
+            desc: "روی دکمه دایره‌ای بزرگ صاعقه بزنید تا تمام سرورها در یک ثانیه در برنامه ثبت شوند.",
+            tip: "در صورت استفاده از کامپیوتر، کیو‌آر کد را با دکمه + در برنامه اسکن کنید."
           },
           {
             title: "مرحله سوم: اتصال و استفاده آسان",
@@ -563,7 +623,7 @@
         const qrDataUrl = ref("");
         const showTour = ref(false);
         const tourStep = ref(0);
-        const appInstalledAcknowledged = ref(localStorage.getItem("vip_app_installed") === "true");
+        const showAppDownloads = ref(false);
 
         const isInAppBrowser = computed(() => {
           const ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -698,11 +758,6 @@
           }
         };
 
-        const dismissAppStep = () => {
-          appInstalledAcknowledged.value = true;
-          localStorage.setItem("vip_app_installed", "true");
-        };
-
         const logout = () => {
           sessionStorage.removeItem("vip_auth_token");
           currentUser.value = null;
@@ -752,8 +807,7 @@
           showTour,
           tourStep,
           closeTour,
-          appInstalledAcknowledged,
-          dismissAppStep,
+          showAppDownloads,
           isInAppBrowser
         };
       }
