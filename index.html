@@ -149,8 +149,9 @@
 
         <!-- Live QR Code Display -->
         <div class="flex flex-col items-center justify-center space-y-3 pt-1">
-          <div class="p-3 bg-white rounded-2xl shadow-xl flex items-center justify-center">
-            <canvas id="server-qrcode" class="max-w-[200px] max-h-[200px]"></canvas>
+          <div class="p-3 bg-white rounded-2xl shadow-xl flex items-center justify-center min-w-[210px] min-h-[210px]">
+            <img v-if="qrDataUrl" :src="qrDataUrl" alt="QR Code" class="w-[200px] h-[200px] block" />
+            <div v-else class="text-xs text-slate-500 animate-pulse">Generating QR...</div>
           </div>
           <p class="text-xs text-slate-400 text-center">
             Scan with <strong>Hiddify App</strong>, <strong>v2rayNG</strong>, or <strong>Streisand</strong>
@@ -219,6 +220,7 @@
         const errorMsg = ref("");
         const inputToken = ref("");
         const currentUser = ref(null);
+        const qrDataUrl = ref("");
 
         const servers = ref([
           {
@@ -280,15 +282,22 @@
         };
 
         const renderQrCode = () => {
-          nextTick(() => {
-            const canvas = document.getElementById("server-qrcode");
-            if (canvas && currentUser.value) {
-              const url = getServerSubLink(currentUser.value, selectedServer.value);
-              QRCode.toCanvas(canvas, url, { width: 200, margin: 1 }, (err) => {
-                if (err) console.error(err);
-              });
-            }
-          });
+          if (!currentUser.value) return;
+          const url = getServerSubLink(currentUser.value, selectedServer.value);
+          if (typeof QRCode !== 'undefined' && QRCode.toDataURL) {
+            QRCode.toDataURL(url, { width: 220, margin: 1 }, (err, dataUrl) => {
+              if (err) {
+                console.error("QR Error:", err);
+                // Fallback to quick QR API if local library fails
+                qrDataUrl.value = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`;
+              } else {
+                qrDataUrl.value = dataUrl;
+              }
+            });
+          } else {
+            // Fallback
+            qrDataUrl.value = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`;
+          }
         };
 
         const selectServer = (s) => {
@@ -357,6 +366,7 @@
           errorMsg,
           inputToken,
           currentUser,
+          qrDataUrl,
           servers,
           selectedServer,
           selectServer,
