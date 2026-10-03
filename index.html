@@ -757,22 +757,28 @@
           tourStep.value = 0;
         };
 
-        onMounted(() => {
+        const checkAndAuthFromUrl = () => {
           const urlParams = new URLSearchParams(window.location.search);
-          const tokenParam = urlParams.get("user") || urlParams.get("token");
+          const tokenParam = urlParams.get("user") || urlParams.get("token") || (window.location.search ? window.location.search.replace("?", "") : "");
           if (tokenParam && authenticateWithToken(tokenParam)) {
-            return;
+            return true;
           }
 
-          const hashParam = window.location.hash.replace("#", "");
-          if (hashParam && authenticateWithToken(hashParam)) {
-            return;
+          const rawHash = (window.location.hash || "").replace(/^[#/]+/, "").trim();
+          if (rawHash && authenticateWithToken(rawHash)) {
+            return true;
           }
 
           const savedToken = sessionStorage.getItem("vip_auth_token");
-          if (savedToken) {
-            authenticateWithToken(savedToken);
+          if (savedToken && authenticateWithToken(savedToken)) {
+            return true;
           }
+          return false;
+        };
+
+        onMounted(() => {
+          checkAndAuthFromUrl();
+          window.addEventListener("hashchange", checkAndAuthFromUrl);
         });
 
         return {
