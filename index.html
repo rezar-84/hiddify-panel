@@ -203,14 +203,27 @@
         </button>
 
         <div v-if="showAppDownloads" class="pt-2.5 flex flex-wrap items-center gap-2 force-ltr">
-          <a href="downloads/hiddify-tv.apk" download="Hiddify-AndroidTV-arm64.apk" class="min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-amber-500/60 text-amber-300 hover:text-white hover:bg-amber-950/80 transition flex items-center gap-2 text-xs font-semibold shadow-sm active:scale-95">
+          <!-- Android TV / Google TV Standard (32-bit arm7 - Fits 99% of Smart TVs) -->
+          <a href="downloads/hiddify-tv.apk" download="Hiddify-AndroidTV-Standard.apk" class="min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-amber-500/70 text-amber-300 hover:text-white hover:bg-amber-950/80 transition flex items-center gap-2 text-xs font-semibold shadow-sm active:scale-95">
             <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
               <polyline points="17 2 12 7 7 2"></polyline>
             </svg>
             <div class="flex flex-col text-start">
-              <span>Android TV / Google TV</span>
-              <span class="text-[9px] text-amber-400/80 font-normal">Direct APK • Preloaded VIP</span>
+              <span>Android TV (Standard)</span>
+              <span class="text-[9px] text-amber-400/80 font-normal">All TVs • Sony, TCL, Mi Box • 32-bit</span>
+            </div>
+          </a>
+
+          <!-- Android TV 64-bit (Shield, Chromecast 4K) -->
+          <a href="downloads/Hiddify-AndroidTV-arm64.apk" download="Hiddify-AndroidTV-arm64.apk" class="min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5 text-xs font-medium shadow-sm active:scale-95">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+              <polyline points="17 2 12 7 7 2"></polyline>
+            </svg>
+            <div class="flex flex-col text-start">
+              <span>Android TV (64-bit)</span>
+              <span class="text-[9px] text-slate-400 font-normal">Shield, CC 4K</span>
             </div>
           </a>
 
@@ -236,6 +249,11 @@
             </svg>
             <span>PC / Mac</span>
           </a>
+
+          <!-- Compatibility Helper Note -->
+          <div class="w-full text-[11px] text-amber-300/90 bg-amber-950/40 border border-amber-500/30 rounded-lg px-3 py-1.5 flex items-center gap-1.5 mt-1">
+            <span>📺 <b>Tip:</b> Most Smart TVs run 32-bit OS. If your TV says <i>"App not compatible"</i>, download the <b>Standard</b> version.</span>
+          </div>
         </div>
       </div>
     </main>
@@ -260,25 +278,28 @@
 
         <!-- Download Buttons (Toggled) -->
         <div v-if="showAppDownloads" class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center gap-2.5 force-ltr">
-          <!-- Android TV / Google TV Direct APK (Special Highlight) -->
-          <a href="downloads/hiddify-tv.apk" download="Hiddify-AndroidTV-arm64.apk" class="min-h-[42px] px-3.5 py-2 rounded-xl bg-slate-900 border border-amber-500/60 text-amber-300 hover:text-white hover:bg-amber-950/80 transition flex items-center gap-2 text-xs font-semibold shadow-sm active:scale-95">
+          <!-- Android TV / Google TV Standard (32-bit arm7 - Fits 99% of Smart TVs) -->
+          <a href="downloads/hiddify-tv.apk" download="Hiddify-AndroidTV-Standard.apk" class="min-h-[42px] px-3.5 py-2 rounded-xl bg-slate-900 border border-amber-500/70 text-amber-300 hover:text-white hover:bg-amber-950/80 transition flex items-center gap-2 text-xs font-semibold shadow-sm active:scale-95">
             <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
               <polyline points="17 2 12 7 7 2"></polyline>
             </svg>
             <div class="flex flex-col text-start">
-              <span>Android TV / Google TV</span>
-              <span class="text-[9px] text-amber-400/80 font-normal">Direct APK • Preloaded VIP</span>
+              <span>Android TV (Standard)</span>
+              <span class="text-[9px] text-amber-400/80 font-normal">All TVs • Sony, TCL, Mi Box • 32-bit</span>
             </div>
           </a>
 
-          <!-- TV Stick (32-bit) -->
-          <a href="downloads/Hiddify-AndroidTV-arm7.apk" download="Hiddify-AndroidTV-arm7.apk" class="min-h-[42px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5 text-xs font-medium shadow-sm active:scale-95">
+          <!-- Android TV 64-bit (Shield, Chromecast 4K) -->
+          <a href="downloads/Hiddify-AndroidTV-arm64.apk" download="Hiddify-AndroidTV-arm64.apk" class="min-h-[42px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5 text-xs font-medium shadow-sm active:scale-95">
             <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
               <polyline points="17 2 12 7 7 2"></polyline>
             </svg>
-            <span>TV Stick (32-bit)</span>
+            <div class="flex flex-col text-start">
+              <span>Android TV (64-bit)</span>
+              <span class="text-[9px] text-slate-400 font-normal">Shield, CC 4K</span>
+            </div>
           </a>
 
           <!-- Google Play (Android Mobile) -->
@@ -306,6 +327,11 @@
             </svg>
             <span>PC / Mac / Linux</span>
           </a>
+
+          <!-- Compatibility Helper Note -->
+          <div class="w-full text-[11px] text-amber-300/90 bg-amber-950/40 border border-amber-500/30 rounded-lg px-3 py-1.5 flex items-center gap-1.5 mt-1">
+            <span>📺 <b>Tip:</b> Most Smart TVs run 32-bit OS. If your TV says <i>"App not compatible"</i>, download the <b>Standard</b> version.</span>
+          </div>
         </div>
       </section>
 
